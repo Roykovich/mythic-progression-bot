@@ -1,0 +1,7 @@
+# Mythic Progression bot
+
+## Instalacion
+
+```
+
+```

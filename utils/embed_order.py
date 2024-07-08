@@ -65,7 +65,10 @@ def staff_order_embed(region, order_name, order_id, description, amount, boostmo
     embed.add_field(name='Faction and Realm', value=f'{faction_choice(faction=faccion)} {faccion.value.capitalize()}\n<:quest:1107428715962572862> {realm}', inline=True)
     embed.add_field(name='Class & Specification', value=f'{class_choice(class_and_spec)} {class_and_spec.replace(' -> ', ' - ')}', inline=True)
     embed.add_field(name='Keystone Lvl', value=f'<:Key:1105410551271653487> {keystone_level}+', inline=True)
-    embed.add_field(name='Recruitment', value=f'<:Tank:1082086003113734214> 0/1\n<:Heal:1082086361936449627> 0/1\n<:Dps:1082087375485812747> 0/2', inline=True) # TODO change this to a dynamic value
+    # embed.add_field(name='Recruitment', value=f'<:Tank:1082086003113734214> 0/1\n<:Heal:1082086361936449627> 0/1\n<:Dps:1082087375485812747> 0/2', inline=True)
+    embed.add_field(name='<:Tank:1082086003113734214> Tank', value='N/A', inline=True)
+    embed.add_field(name='<:Heal:1082086361936449627> Healer', value='N/A', inline=True)
+    embed.add_field(name='<:dps:1257157322044608684> DPS', value='N/A', inline=True)
     embed.set_thumbnail(url='attachment://logo_mp.png')
     embed.set_footer(text=f'Price: {amount} | {'USD' if payment.value == 'usd' else 'Gold'} | order_id: {order_id}')
 

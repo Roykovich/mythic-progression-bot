@@ -1,9 +1,9 @@
 import discord
-import requests
 from discord.ext import commands
 from discord import app_commands
 
 import settings
+import database.main as db
 
 def main():
     intents = discord.Intents.default()
@@ -23,6 +23,9 @@ def main():
 
         bot.tree.copy_global_to(guild=settings.GUILD_ID)
         await bot.tree.sync(guild=settings.GUILD_ID)
+
+        db.create_tables()
+
 
     bot.run(settings.TOKEN)
 

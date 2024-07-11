@@ -1,7 +1,5 @@
 import discord
-import requests
 import typing
-import uuid
 from discord.ext import commands
 from discord import app_commands
 
@@ -10,7 +8,9 @@ from utils.load_spec_and_class import classes_and_spec_autocomplete
 from utils.embed_order import order_embed
 from utils.embed_order import staff_order_embed
 from views.view_order import OrderView
-from views.view_order import get_cursor
+from views.view_command_order import OrderCommandView
+
+from database.orders import create_order, accept_applicant_to_order
 
 import settings
 
@@ -79,9 +79,7 @@ class Orders(commands.Cog):
         class_and_spec: str,
         faccion: app_commands.Choice[str],
         realm: str,
-        ):
-        # print(order_name, payment, amount, region, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm)
-        
+        ):        
         orders_channel = self.bot.get_channel(settings.ORDER_CHANNEL_ID)
 
         # Si ninguna descripcion es indicada ocurre esto
@@ -90,18 +88,27 @@ class Orders(commands.Cog):
 
         # archivo de la imagen para enviarla al thumbnail
         file = discord.File('images/logo_mp.png', filename='logo_mp.png')
+        # crea el embed de la orden para los boosters
         thread_embed = order_embed(region, order_name, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, payment)
-        thread_view = OrderView(timeout=None)
+        thread_view = OrderView(timeout=None) # Crear la vista de la orden
+        # crea el hilo de la orden
+        # ? Donde dice CAMBIAR ESTO DE AQUÍ, se debe de cambiar por el mensaje que se quiere enviar al hilo, en este caso el tag a los boosters
         thread = await orders_channel.create_thread(name=f'{order_name}', file=file, embed=thread_embed, content=f'CAMBIAR ESTO DE AQUÍ', view=thread_view)
 
-        staff_embed = staff_order_embed(region, order_name, order_id, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, payment)
+        # crea el embed de la orden para el staff
         staff_file = discord.File('images/logo_mp.png', filename='logo_mp.png')
-        await interaction.response.send_message(content=f'Order creada correctamente en {thread.thread.mention}', file=staff_file, embed=staff_embed)
+        staff_embed = staff_order_embed(region, order_name, order_id, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, payment)
+        staff_view = OrderCommandView(timeout=None) # Crear la vista de la orden
+        await interaction.response.send_message(content=f'Order creada correctamente en {thread.thread.mention}', file=staff_file, embed=staff_embed, view=staff_view)
+        # Esto lo utilizamos para obtener el id del mensaje original de la orden
         order_message = await interaction.original_response()
+        staff_view.order_id = order_id
+        staff_view.message_id = order_message.id
+        staff_view.bot = self.bot
 
-        db = get_cursor()
-        new_order_id = uuid.uuid4()
-        db.execute('INSERT INTO orders (id, order_id, message_id, thread_id) VALUES (?, ?, ?, ?)', (new_order_id, order_id, order_message.id, thread.message.id))
+        # Creamos la orden
+        create_order(order_id, order_message.id, thread.message.id, interaction.user.id)
+        
         thread_view.order_id = order_id
         thread_view.message_id = order_message.id
         thread_view.bot = self.bot
@@ -121,9 +128,10 @@ class Orders(commands.Cog):
         await interaction.response.send_message(f'No tienes permisos para crear una orden', ephemeral=True)
         await orders_channel.send(f'<@443948776562884620> El usuario {interaction.user.mention} ha intentado crear una orden pero ha ocurrido un error: {error_message}')
 
-    @commands.command(name='accept applicant', description='Acepta un aplicante')
+    @app_commands.command(name='accept_applicant', description='Acepta un aplicante')
     @app_commands.describe(order_id='ID de la orden')
     @app_commands.describe(user_id='ID del usuario')
+    @app_commands.describe(user='Usuario')
     @app_commands.choices(role=[
         app_commands.Choice(name='tank', value='tank'),
         app_commands.Choice(name='healer', value='healer'),
@@ -133,9 +141,12 @@ class Orders(commands.Cog):
         interaction: discord.Interaction,
         order_id: str,
         user_id: str,
-        faccion: app_commands.Choice[str],
+        user: typing.Optional[discord.User],
+        role: app_commands.Choice[str],
         ):
-        ...
+        print(user)
+        accept_applicant_to_order(order_id, user_id, role)
+        await interaction.response.send_message(f'Aplicante aceptado correctamente', ephemeral=True)
 
 
 

@@ -41,11 +41,32 @@ def display_applicants(applications):
     
     return value
 
+def update_accepted_applicants_fields(embed, applicant, raiderio, role):
+    field = 12 if role == 'tank' else 13 if role == 'healer' else 14
+    embed_name = embed.fields[field].name
+    embed_value = embed.fields[field].value
+    embed.set_field_at(field, name=embed_name, value=display_accepted_applicants(applicant, raiderio, role, embed_value), inline=True)
+
+
+def display_accepted_applicants(applicant, raiderio, role, value):
+    print(applicant, raiderio, role, value)
+    if not applicant:
+        return 'N/A'
+    
+    if role == 'first_dps':
+        return f'<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
+    elif role == 'second_dps':
+        return f'{value}\n<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
+    else:
+        return f'<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
+    
+
 def update_after_cancel(embed, order_id, role):
     applicants = get_applications(order_id, role)
     update_applicants_fields(embed, applicants, role)
 
-def io_colour_checker(io):
+
+def io_colour_checker(io: int):
     colours = {
         1000: "⚪",
         1200: "🟢",

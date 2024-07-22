@@ -11,6 +11,9 @@ from views.view_order import OrderView
 from views.view_command_order import OrderCommandView
 
 from database.orders import create_order, accept_applicant_to_order
+from database.applicants import update_accepted_applicants_fields
+
+from utils.get_message import get_message
 
 import settings
 
@@ -26,6 +29,8 @@ class Orders(commands.Cog):
     @app_commands.describe(order_name='Nombre de la orden')
     @app_commands.describe(order_id='ID de la orden')
     @app_commands.describe(description='Descripción de la orden')
+    @app_commands.describe(custom_name='Nombre del pj')
+    @app_commands.describe(battletag='Battletag')
     @app_commands.choices(payment=[
         app_commands.Choice(name='Gold', value='gold'),
         app_commands.Choice(name='USD', value='usd')
@@ -49,7 +54,6 @@ class Orders(commands.Cog):
     @app_commands.choices(timed=[
         app_commands.Choice(name='Timed', value=0),
         app_commands.Choice(name='Untimed', value=1),
-        app_commands.Choice(name='N/A', value=2)
     ])
     @app_commands.choices(streaming=[
         app_commands.Choice(name='Si', value=0),
@@ -57,8 +61,8 @@ class Orders(commands.Cog):
     ])
     @app_commands.autocomplete(class_and_spec=classes_and_spec_autocomplete)
     @app_commands.choices(faccion=[
-        app_commands.Choice(name='Alianza', value='ally'),
-        app_commands.Choice(name='Horda', value='horde')
+        app_commands.Choice(name='Alianza', value='Ally'),
+        app_commands.Choice(name='Horda', value='Horde')
     ])
     @app_commands.autocomplete(realm=realms_autocomplete)
     # @app_commands.checks.has_role(int(settings.ROLE_SERVER_STAFF_ID))
@@ -67,6 +71,8 @@ class Orders(commands.Cog):
         order_name: str,
         order_id: str,
         description: typing.Optional[str],
+        custom_name: typing.Optional[str],
+        battletag: typing.Optional[str],
         payment: app_commands.Choice[str],
         amount: str,
         region: app_commands.Choice[str],
@@ -86,10 +92,16 @@ class Orders(commands.Cog):
         if not description:
             description = 'No description provided'
 
+        if not custom_name:
+            custom_name = 'N/A'
+
+        if not battletag:
+            battletag = 'N/A'
+
         # archivo de la imagen para enviarla al thumbnail
         file = discord.File('images/logo_mp.png', filename='logo_mp.png')
         # crea el embed de la orden para los boosters
-        thread_embed = order_embed(region, order_name, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, payment)
+        thread_embed = order_embed(region, order_name, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion.value, realm, payment)
         thread_view = OrderView(timeout=None) # Crear la vista de la orden
         # crea el hilo de la orden
         # ? Donde dice CAMBIAR ESTO DE AQUÍ, se debe de cambiar por el mensaje que se quiere enviar al hilo, en este caso el tag a los boosters
@@ -97,7 +109,7 @@ class Orders(commands.Cog):
 
         # crea el embed de la orden para el staff
         staff_file = discord.File('images/logo_mp.png', filename='logo_mp.png')
-        staff_embed = staff_order_embed(region, order_name, order_id, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, payment)
+        staff_embed = staff_order_embed(region, order_name, order_id, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion.value, realm, payment)
         staff_view = OrderCommandView(timeout=None) # Crear la vista de la orden
         await interaction.response.send_message(content=f'Order creada correctamente en {thread.thread.mention}', file=staff_file, embed=staff_embed, view=staff_view)
         # Esto lo utilizamos para obtener el id del mensaje original de la orden
@@ -107,7 +119,7 @@ class Orders(commands.Cog):
         staff_view.bot = self.bot
 
         # Creamos la orden
-        create_order(order_id, order_message.id, thread.message.id, interaction.user.id)
+        create_order(order_id, order_message.id, thread.message.id, interaction.user.id, order_name, description, amount, payment.value, boostmode.value, region.value, traders.value, keystone_level, runs, timed.value, streaming.value, class_and_spec, faccion.value, realm, custom_name, battletag)
         
         thread_view.order_id = order_id
         thread_view.message_id = order_message.id
@@ -130,23 +142,38 @@ class Orders(commands.Cog):
 
     @app_commands.command(name='accept_applicant', description='Acepta un aplicante')
     @app_commands.describe(order_id='ID de la orden')
-    @app_commands.describe(user_id='ID del usuario')
     @app_commands.describe(user='Usuario')
     @app_commands.choices(role=[
         app_commands.Choice(name='tank', value='tank'),
         app_commands.Choice(name='healer', value='healer'),
-        app_commands.Choice(name='dps', value='dps')
+        app_commands.Choice(name='first dps', value='first_dps'),
+        app_commands.Choice(name='second dps', value='second_dps')
     ])
     async def accept_applicant(self,
         interaction: discord.Interaction,
         order_id: str,
-        user_id: str,
-        user: typing.Optional[discord.User],
+        user: discord.User,
         role: app_commands.Choice[str],
         ):
-        print(user)
-        accept_applicant_to_order(order_id, user_id, role)
+        print(user.id)
+        order = accept_applicant_to_order(order_id, user.id, role.value)
         await interaction.response.send_message(f'Aplicante aceptado correctamente', ephemeral=True)
+        print(order)
+        if role.value == 'tank':
+            raiderio = order[6]
+        elif role.value == 'healer':
+            raiderio = order[8]
+        elif role.value == 'first_dps':
+            raiderio = order[10]
+        else:
+            raiderio = order[12]
+
+        staff_message = await get_message(self.bot, order[2])
+        embed = staff_message.embeds[0]
+
+        update_accepted_applicants_fields(embed, user.id, raiderio, role.value)
+
+        await staff_message.edit(embed=embed, attachments=[])
 
 
 

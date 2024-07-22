@@ -1,6 +1,7 @@
 import discord
 import random # ! Esto es solo para emular el valor del raiderio
 from database.applicants import is_already_applicated, apply_to_order, cancel_application, get_applications, update_applicants_fields
+from utils.get_message import get_message
 
 import settings
 COMMAND_CHANNEL_ID = settings.COMMAND_CHANNEL_ID
@@ -9,12 +10,6 @@ COMMAND_CHANNEL_ID = settings.COMMAND_CHANNEL_ID
 def update_after_cancel(embed, order_id, role):
     applications = get_applications(order_id, role)
     update_applicants_fields(embed, applications, role)
-
-async def get_message(bot, message_id):
-    channel = bot.get_channel(COMMAND_CHANNEL_ID)
-    message = await channel.fetch_message(message_id)
-
-    return message
 
 # TODO cambiar la imagen a URL en imgur o algo
 # * Ver como se aplica un for para las aplicaciones y ponerlo como un valor dinamico o usarlo directamente del valor del embed y solo agregarlo con un salto de linea

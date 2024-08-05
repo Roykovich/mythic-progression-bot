@@ -22,3 +22,4 @@
 - [ ] Funciones modulares para los botones full y los de aplicacion de booster
 - [ ] Funciones para aplicantes y ordenes de la DB
 - [ ] Agregar documentacion y comentarios
+- [ ] Cambiar el naming. Hay al menos 3 constantes: Staff, Booster y Order

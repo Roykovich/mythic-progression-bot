@@ -1,48 +1,74 @@
 import discord
 import random # ! Esto es solo para emular el valor del raiderio
-from database.applicants import is_already_applicated, apply_to_order, cancel_application, get_applications, update_applicants_fields
+from database.applicants import update_booster_applicants_fields
 from database.orders import check_order_full, get_order_info
 from utils.embed_order import order_created_embed
+from utils.get_message import get_message
 
 import settings
 COMMAND_CHANNEL_ID = settings.COMMAND_CHANNEL_ID
 
-
-# TODO cambiar la imagen a URL en imgur o algo
-# * Ver como se aplica un for para las aplicaciones y ponerlo como un valor dinamico o usarlo directamente del valor del embed y solo agregarlo con un salto de linea
-# * mover toda la DB a un archivo propio y hacer un archivo de funciones para las DB
-# * y que cada boton solo llame a estas funciones para que sea mas legible y modular
-# Cuando se aplique un boton, se debe de actualizar el embed con los aplicantes (disabled cuando ya se selecciono los roles)
-# * crear tabla para los aplicantes aceptados con el id de la orden y el id del usuario y su rol
-
 class OrderCommandView(discord.ui.View):
-    @discord.ui.button(label='Tank full', emoji='<:Tank:1082086003113734214>', style=discord.ButtonStyle.grey, disabled=True)
+    @discord.ui.button(label='Tank full', emoji='<:Tank:1082086003113734214>', style=discord.ButtonStyle.grey)
     async def tank(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
         message_id = self.message_id
+        thread_message = self.thread_message
+        thread_view = self.thread_view
         user_id = interaction.user.id
         role = 'tank'
-        ...
+        
+        button = thread_view.children[0]
+        button.disabled = True
 
-    @discord.ui.button(label='Healer full', emoji='<:Heal:1082086361936449627>', style=discord.ButtonStyle.grey, disabled=True)
+        booster_message = await get_message(self.bot, thread_message, thread_message)
+        embed = booster_message.embeds[0]
+
+        update_booster_applicants_fields(embed, role)
+
+        await booster_message.edit(embed=embed, attachments=[], view=self.thread_view)
+
+    @discord.ui.button(label='Healer full', emoji='<:Heal:1082086361936449627>', style=discord.ButtonStyle.grey)
     async def healer(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
         message_id = self.message_id
+        thread_message = self.thread_message
+        thread_view = self.thread_view
         user_id = interaction.user.id
         role = 'healer'
-        ...
+        
+        button = thread_view.children[1]
+        button.disabled = True
+
+        booster_message = await get_message(self.bot, thread_message, thread_message)
+        embed = booster_message.embeds[0]
+
+        update_booster_applicants_fields(embed, role)
+
+        await booster_message.edit(embed=embed, attachments=[], view=self.thread_view)
         
 
-    @discord.ui.button(label='Dps full', emoji='<:dps:1257157322044608684>', style=discord.ButtonStyle.grey, disabled=True)
+    @discord.ui.button(label='Dps full', emoji='<:dps:1257157322044608684>', style=discord.ButtonStyle.grey)
     async def dps(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
         message_id = self.message_id
+        thread_message = self.thread_message
+        thread_view = self.thread_view
         user_id = interaction.user.id
         role = 'dps'
-        ...
+        
+        button = thread_view.children[2]
+        button.disabled = True
+
+        booster_message = await get_message(self.bot, thread_message, thread_message)
+        embed = booster_message.embeds[0]
+
+        update_booster_applicants_fields(embed, role)
+
+        await booster_message.edit(embed=embed, attachments=[], view=self.thread_view)
             
 
     @discord.ui.button(label='Complete Selection', emoji='✅', style=discord.ButtonStyle.success, row=1)

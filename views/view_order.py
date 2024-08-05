@@ -1,6 +1,6 @@
 import discord
 import random # ! Esto es solo para emular el valor del raiderio
-from database.applicants import is_already_applicated, apply_to_order, cancel_application, get_applications, update_applicants_fields
+from database.applicants import is_already_applicated, apply_to_order, cancel_application, get_applications, update_staff_applicants_fields, update_applicants_fields
 from utils.get_message import get_message
 
 import settings
@@ -9,7 +9,7 @@ COMMAND_CHANNEL_ID = settings.COMMAND_CHANNEL_ID
 
 def update_after_cancel(embed, order_id, role):
     applications = get_applications(order_id, role)
-    update_applicants_fields(embed, applications, role)
+    update_staff_applicants_fields(embed, applications, role)
 
 # TODO cambiar la imagen a URL en imgur o algo
 # * Ver como se aplica un for para las aplicaciones y ponerlo como un valor dinamico o usarlo directamente del valor del embed y solo agregarlo con un salto de linea
@@ -25,6 +25,7 @@ class OrderView(discord.ui.View):
         order_id = self.order_id
         order_name = self.order_name
         message_id = self.message_id
+        booster_thread = self.thread_message
         user_id = interaction.user.id
         role = 'tank'
 
@@ -36,11 +37,15 @@ class OrderView(discord.ui.View):
         applicants = get_applications(order_id, role)
 
         staff_message = await get_message(self.bot, message_id)
+        booster_message = await get_message(self.bot, booster_thread, booster_thread)
         embed = staff_message.embeds[0]
+        booster_embed = booster_message.embeds[0]
         
-        update_applicants_fields(embed, applicants, role)
+        update_staff_applicants_fields(embed, applicants, role)
+        update_applicants_fields(booster_embed, role, order_id)
         
         await staff_message.edit(embed=embed, attachments=[])
+        await booster_message.edit(embed=booster_embed, attachments=[])
 
         await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:Tank:1082086003113734214> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
         
@@ -51,6 +56,7 @@ class OrderView(discord.ui.View):
         order_id = self.order_id
         order_name = self.order_name
         message_id = self.message_id
+        booster_thread = self.thread_message
         user_id = interaction.user.id
         role = 'healer'
 
@@ -62,11 +68,15 @@ class OrderView(discord.ui.View):
         applicants = get_applications(order_id, role)
 
         staff_message = await get_message(self.bot, message_id)
+        booster_message = await get_message(self.bot, booster_thread, booster_thread)
         embed = staff_message.embeds[0]
+        booster_embed = booster_message.embeds[0]
         
-        update_applicants_fields(embed, applicants, role)
+        update_staff_applicants_fields(embed, applicants, role)
+        update_applicants_fields(booster_embed, role, order_id)
         
         await staff_message.edit(embed=embed, attachments=[])
+        await booster_message.edit(embed=booster_embed, attachments=[])
         
         await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:Heal:1082086361936449627> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
     
@@ -77,6 +87,7 @@ class OrderView(discord.ui.View):
         order_id = self.order_id
         order_name = self.order_name
         message_id = self.message_id
+        booster_thread = self.thread_message
         user_id = interaction.user.id
         role = 'dps'
 
@@ -88,11 +99,15 @@ class OrderView(discord.ui.View):
         applicants = get_applications(order_id, role)
 
         staff_message = await get_message(self.bot, message_id)
+        booster_message = await get_message(self.bot, booster_thread, booster_thread)
         embed = staff_message.embeds[0]
+        booster_embed = booster_message.embeds[0]
         
-        update_applicants_fields(embed, applicants, role)
+        update_staff_applicants_fields(embed, applicants, role)
+        update_applicants_fields(booster_embed, role, order_id)
         
         await staff_message.edit(embed=embed, attachments=[])
+        await booster_message.edit(embed=booster_embed, attachments=[])
             
         await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:dps:1257157322044608684> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
 

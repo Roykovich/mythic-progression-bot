@@ -7,4 +7,10 @@
 ```
 
 ## Todo
-- Interacciones con los views en las ordenes y que en el panel de control hacer un seleccionador (se debe crear un mensaje por DM donde diga que fue aceptado en el orden X probablemente agregar un link que lleve al thread creado)
+- [ ] Agregar un estado a la view de los booster, para revertir el boton de full de ser necesario la busqueda de otro booster
+- [ ] Al cancelar aplicacion, el contador de booster aplicando debe bajar
+- [ ] Al cancelar aplicacion, se deben eliminar de la lista de aceptados
+- [ ] Al cancelar el booster, mensaje ephemeral de cancelacion de la aplicacion
+- [ ] Aplicar como team. Idea: Modal donde puedas taggear a las personas que son de tu team. Crear una tabla donde se pueda ver quienes son parte del team, que esta tenga la id de la orden, los id de los taggeados y crear un comando para ver quienes son y asi validarlos y poder aceptarlos
+- [ ] Autocompletado en las IDs del comando de aceptar aplicantes
+- [ ] Ver si el SelectMenu funciona como dropdown para los botones en el embed de los booster para DPS, TANK y HEALER

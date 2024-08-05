@@ -116,6 +116,8 @@ class Orders(commands.Cog):
         order_message = await interaction.original_response()
         staff_view.order_id = order_id
         staff_view.order_name = order_name
+        staff_view.thread_message = thread.message.id
+        staff_view.thread_view = thread_view
         staff_view.message_id = order_message.id
         staff_view.bot = self.bot
 
@@ -124,6 +126,7 @@ class Orders(commands.Cog):
         
         thread_view.order_id = order_id
         thread_view.message_id = order_message.id
+        thread_view.thread_message = thread.message.id
         thread_view.order_name = order_name
         thread_view.bot = self.bot
 

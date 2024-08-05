@@ -59,8 +59,10 @@ class OrderCommandView(discord.ui.View):
 
             for booster_id in boosters:
                 tags += f'<@{booster_id}> '
+                booster_dm = await self.bot.fetch_user(booster_id)
+                await booster_dm.send(f'¡Felicidades, has sido seleccionado para la orden `{self.order_name}`!\nIngresa en {thread.mention} para continuar con la orden.')
 
-            tags += f'\n<@&861688529637474385>'
+            tags += f'\n<@&861688529637474385>' # ?
 
             embed = order_created_embed(order_info, boosters)
 

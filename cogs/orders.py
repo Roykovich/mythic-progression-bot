@@ -61,8 +61,8 @@ class Orders(commands.Cog):
     ])
     @app_commands.autocomplete(class_and_spec=classes_and_spec_autocomplete)
     @app_commands.choices(faccion=[
-        app_commands.Choice(name='Alianza', value='Ally'),
-        app_commands.Choice(name='Horda', value='Horde')
+        app_commands.Choice(name='Alianza', value='ally'),
+        app_commands.Choice(name='Horda', value='horde')
     ])
     @app_commands.autocomplete(realm=realms_autocomplete)
     # @app_commands.checks.has_role(int(settings.ROLE_SERVER_STAFF_ID))
@@ -115,6 +115,7 @@ class Orders(commands.Cog):
         # Esto lo utilizamos para obtener el id del mensaje original de la orden
         order_message = await interaction.original_response()
         staff_view.order_id = order_id
+        staff_view.order_name = order_name
         staff_view.message_id = order_message.id
         staff_view.bot = self.bot
 
@@ -123,6 +124,7 @@ class Orders(commands.Cog):
         
         thread_view.order_id = order_id
         thread_view.message_id = order_message.id
+        thread_view.order_name = order_name
         thread_view.bot = self.bot
 
     @orderslash.error

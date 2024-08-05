@@ -23,6 +23,7 @@ class OrderView(discord.ui.View):
     async def tank(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
+        order_name = self.order_name
         message_id = self.message_id
         user_id = interaction.user.id
         role = 'tank'
@@ -41,10 +42,14 @@ class OrderView(discord.ui.View):
         
         await staff_message.edit(embed=embed, attachments=[])
 
+        await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:Tank:1082086003113734214> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
+        
+
     @discord.ui.button(label='Healer', emoji='<:Heal:1082086361936449627>', style=discord.ButtonStyle.grey)
     async def healer(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
+        order_name = self.order_name
         message_id = self.message_id
         user_id = interaction.user.id
         role = 'healer'
@@ -63,11 +68,14 @@ class OrderView(discord.ui.View):
         
         await staff_message.edit(embed=embed, attachments=[])
         
+        await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:Heal:1082086361936449627> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
+    
 
     @discord.ui.button(label='Dps', emoji='<:dps:1257157322044608684>', style=discord.ButtonStyle.grey)
     async def dps(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
+        order_name = self.order_name
         message_id = self.message_id
         user_id = interaction.user.id
         role = 'dps'
@@ -86,6 +94,8 @@ class OrderView(discord.ui.View):
         
         await staff_message.edit(embed=embed, attachments=[])
             
+        await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:dps:1257157322044608684> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
+
 
     @discord.ui.button(label='Team application', emoji='🔜', style=discord.ButtonStyle.blurple, row=1, disabled=True)
     async def team(self, interaction: discord.Interaction, button: discord.ui.Button):

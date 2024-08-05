@@ -1,5 +1,6 @@
 import random
 import uuid
+import re
 from database.main import get_cursor
 
 db = get_cursor()
@@ -24,10 +25,25 @@ def get_applications(order_id, role):
 
     return applications
 
-def update_applicants_fields(embed, applicants, role):
+def get_role_applications(order_id, role):
+    applications = db.execute('SELECT count(*) FROM applications WHERE order_id = ? AND role = ?', (order_id, role)).fetchall()
+    return applications[0][0]
+
+def update_staff_applicants_fields(embed, applicants, role):
     # Dependiendo del role, se actualiza el campo correspondiente
     field = 9 if role == 'tank' else 10 if role == 'healer' else 11
     embed.set_field_at(field, name=embed.fields[field].name, value=display_applicants(applicants), inline=True)
+
+def update_applicants_fields(embed, role, order_id):
+    amount = get_role_applications(order_id, role)
+    field = 9 if role == 'tank' else 10 if role == 'healer' else 11
+    replacement = re.sub(r'\(\d\)', f'({amount})', embed.fields[field].name)
+    embed.set_field_at(field, name=replacement, value=f'{'0/2' if role == 'dps' else '0/1'}', inline=True)
+
+def update_booster_applicants_fields(embed, role):
+    # Dependiendo del role, se actualiza el campo correspondiente
+    field = 9 if role == 'tank' else 10 if role == 'healer' else 11
+    embed.set_field_at(field, name=embed.fields[field].name, value=f'{'~~2/2~~ **FULL**' if role == 'dps' else '~~1/1~~ **FULL**'}', inline=True)
 
 def display_applicants(applications):
     if len(applications) == 0:
@@ -60,10 +76,10 @@ def display_accepted_applicants(applicant, raiderio, role, value):
     else:
         return f'<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
     
-
+# ??? Revisar que hice aqui
 def update_after_cancel(embed, order_id, role):
     applicants = get_applications(order_id, role)
-    update_applicants_fields(embed, applicants, role)
+    update_staff_applicants_fields(embed, applicants, role)
 
 
 def io_colour_checker(io: int):

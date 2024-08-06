@@ -1,22 +1,16 @@
 import discord
 import random # ! Esto es solo para emular el valor del raiderio
 from database.applicants import is_already_applicated, apply_to_order, cancel_application, get_applications, update_staff_applicants_fields, update_applicants_fields
+from database.orders import check_if_booster_is_already_in_order
 from utils.get_message import get_message
 
 import settings
 COMMAND_CHANNEL_ID = settings.COMMAND_CHANNEL_ID
 
 
-def update_after_cancel(embed, order_id, role):
+def update_after_cancel(embed, order_id, role, accepted=False, applicant=None):
     applications = get_applications(order_id, role)
-    update_staff_applicants_fields(embed, applications, role)
-
-# TODO cambiar la imagen a URL en imgur o algo
-# * Ver como se aplica un for para las aplicaciones y ponerlo como un valor dinamico o usarlo directamente del valor del embed y solo agregarlo con un salto de linea
-# * mover toda la DB a un archivo propio y hacer un archivo de funciones para las DB
-# y que cada boton solo llame a estas funciones para que sea mas legible y modular
-# Cuando se aplique un boton, se debe de actualizar el embed con los aplicantes (disabled cuando ya se selecciono los roles)
-# crear tabla para los aplicantes aceptados con el id de la orden y el id del usuario y su rol
+    update_staff_applicants_fields(embed, applications, role, accepted=accepted, applicant=applicant)
 
 class OrderView(discord.ui.View):
     @discord.ui.button(label='Tank', emoji='<:Tank:1082086003113734214>', style=discord.ButtonStyle.grey)
@@ -41,7 +35,7 @@ class OrderView(discord.ui.View):
         embed = staff_message.embeds[0]
         booster_embed = booster_message.embeds[0]
         
-        update_staff_applicants_fields(embed, applicants, role)
+        update_staff_applicants_fields(embed, applicants, role, accepted=False)
         update_applicants_fields(booster_embed, role, order_id)
         
         await staff_message.edit(embed=embed, attachments=[])
@@ -72,7 +66,7 @@ class OrderView(discord.ui.View):
         embed = staff_message.embeds[0]
         booster_embed = booster_message.embeds[0]
         
-        update_staff_applicants_fields(embed, applicants, role)
+        update_staff_applicants_fields(embed, applicants, role, accepted=False)
         update_applicants_fields(booster_embed, role, order_id)
         
         await staff_message.edit(embed=embed, attachments=[])
@@ -103,7 +97,7 @@ class OrderView(discord.ui.View):
         embed = staff_message.embeds[0]
         booster_embed = booster_message.embeds[0]
         
-        update_staff_applicants_fields(embed, applicants, role)
+        update_staff_applicants_fields(embed, applicants, role, accepted=False)
         update_applicants_fields(booster_embed, role, order_id)
         
         await staff_message.edit(embed=embed, attachments=[])
@@ -118,20 +112,31 @@ class OrderView(discord.ui.View):
     
     @discord.ui.button(label='Cancel', emoji='❌', style=discord.ButtonStyle.red, row=1)
     async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.defer()
         order_id = self.order_id
         user_id = interaction.user.id
         staff_message = await get_message(self.bot, self.message_id)
         embed = staff_message.embeds[0]
 
         if cancel_application(order_id, user_id) == 0:
+            await interaction.response.send_message('No has aplicado a esta orden.', ephemeral=True)
             return
         
         update_after_cancel(embed, order_id, 'tank')
         update_after_cancel(embed, order_id, 'healer')
         update_after_cancel(embed, order_id, 'dps')
 
+        # Si el Booster estaba aceptado en la orden, aqui nos aseguramos de eliminarlo del embed
+        if check_if_booster_is_already_in_order(order_id, user_id) == 1:
+            print("Si estaba tuqueao")
+            update_after_cancel(embed, order_id, 'tank', accepted=True, applicant=user_id)
+            update_after_cancel(embed, order_id, 'healer', accepted=True, applicant=user_id)
+            update_after_cancel(embed, order_id, 'dps', accepted=True, applicant=user_id)
+            # Aqui podriamos agregar algo que avise al creador de la orden que alguien se le fue de la orden
+        else:
+            print("No estaba tuqueao")
+
         await staff_message.edit(embed=embed, attachments=[])
+        await interaction.response.send_message('Has cancelado tu aplicación correctamente.', ephemeral=True)
 
         
         

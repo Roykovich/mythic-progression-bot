@@ -29,8 +29,15 @@ def get_role_applications(order_id, role):
     applications = db.execute('SELECT count(*) FROM applications WHERE order_id = ? AND role = ?', (order_id, role)).fetchall()
     return applications[0][0]
 
-def update_staff_applicants_fields(embed, applicants, role):
-    # Dependiendo del role, se actualiza el campo correspondiente
+def update_staff_applicants_fields(embed, applicants, role, accepted=None, applicant=None):
+    # Si el Booster estaba aceptado, tambien cambia esos campos en el embed del Staff
+    if accepted:
+        # Dependiendo del role, se actualiza el campo correspondiente
+        field = 12 if role == 'tank' else 13 if role == 'healer' else 14
+        embed_value = embed.fields[field].value
+        embed.set_field_at(field, name=embed.fields[field].name, value=remove_accepted_applicant(applicant, embed_value), inline=True)
+        return
+    
     field = 9 if role == 'tank' else 10 if role == 'healer' else 11
     embed.set_field_at(field, name=embed.fields[field].name, value=display_applicants(applicants), inline=True)
 
@@ -75,12 +82,20 @@ def display_accepted_applicants(applicant, raiderio, role, value):
         return f'{value}\n<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
     else:
         return f'<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
+
+def remove_accepted_applicant(applicant, value):
+    new = value
+    if len(value) > 35:
+        new = re.sub(rf'<@{applicant}> \(.+\)', '', value)
+    else:
+        new = re.sub(rf'<@{applicant}> \(.+\)', 'N/A', value)
+
+    return new
     
-# ??? Revisar que hice aqui
+# ??? Revisar que hice aqui -> Esto esta en view_order.py
 def update_after_cancel(embed, order_id, role):
     applicants = get_applications(order_id, role)
     update_staff_applicants_fields(embed, applicants, role)
-
 
 def io_colour_checker(io: int):
     colours = {

@@ -41,6 +41,11 @@ def check_order_full(order_id):
         return order
     else:
         return False
+    
+def check_if_booster_is_already_in_order(order_id, user_id):
+    # Esto va a retornar un 0 si no esta en la orden y un 1 si ya esta en la orden
+    booster = db.execute('SELECT count(1) FROM orders_in_progress WHERE order_id = ? AND (tank = ? OR healer = ? OR first_dps = ? OR second_dps = ?)', (order_id, user_id, user_id, user_id, user_id)).fetchone()
+    return booster[0]
         
 def get_order_info(order_id):
     order = db.execute('SELECT order_id, order_name, description, amount, payment, boostmode, region, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, custom_name, battletag FROM orders WHERE order_id = ?', (order_id,)).fetchone()

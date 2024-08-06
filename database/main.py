@@ -1,7 +1,5 @@
 import sqlite3
 import uuid
-import random
-import settings
 
 sqlite3.register_adapter(uuid.UUID, lambda u: u.bytes_le)
 sqlite3.register_converter("GUID", lambda b: uuid.UUID(bytes_le=b))

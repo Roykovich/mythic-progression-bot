@@ -42,6 +42,8 @@ pip install -U discord.py requests
 - [ ] Agregar documentacion y comentarios
 - [ ] Cambiar el naming. Hay al menos 3 constantes: Staff, Booster y Order
 - [ ] Ver si el SelectMenu funciona como dropdown para los botones en el embed de los booster para DPS, TANK y HEALER (para elegir especializacion como Paladin Retry, Holy o Protection)
+- [ ] Crear un .env_example
+- [ ] Agregar mensaje de feedback a la hora de darle a full
 
 ## Long Term ToDos
 - [ ] Comando de remake de la orden. Motivo: Si un booster llega a salirse, se crea una nueva orden pero que sea asi: <orden_id>-<1, 2 , 3 ... n>. Esto tendria la funcionalidad que a la hora de acreditar a los boosters a cada uno le toque su parte correspondiente y evitar errores a la hora del pago automatizado.

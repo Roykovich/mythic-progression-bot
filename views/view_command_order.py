@@ -9,7 +9,7 @@ import settings
 COMMAND_CHANNEL_ID = settings.COMMAND_CHANNEL_ID
 
 class OrderCommandView(discord.ui.View):
-    @discord.ui.button(label='Tank full', emoji='<:Tank:1082086003113734214>', style=discord.ButtonStyle.grey)
+    @discord.ui.button(label='Tank full', emoji='<:tank:1270969225871360010>', style=discord.ButtonStyle.grey)
     async def tank(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
@@ -76,19 +76,22 @@ class OrderCommandView(discord.ui.View):
         staff_channel = self.bot.get_channel(COMMAND_CHANNEL_ID)
         boosters = check_order_full(self.order_id)
 
+        # Esto es para los emojis de los roles
+        role_emojis = ['<:tank:1270969225871360010>', '<:Heal:1082086361936449627>', '<:dps:1257157322044608684>', '<:dps:1257157322044608684>']
+
         if boosters:
             await interaction.response.send_message('Orden completa', ephemeral=True)
-            thread = await staff_channel.create_thread(name=f'Order - {self.order_id}', reason='Orden Iniciada', invitable=False)
+            thread = await staff_channel.create_thread(name=f'# Order - {self.order_id}', reason='Orden Iniciada', invitable=False)
             order_info = get_order_info(self.order_id)
 
             tags = ''
 
-            for booster_id in boosters:
-                tags += f'<@{booster_id}> '
+            for i, booster_id in enumerate(boosters):
+                tags += f'{role_emojis[i]} <@{booster_id}>\n'
                 booster_dm = await self.bot.fetch_user(booster_id)
                 await booster_dm.send(f'¡Felicidades, has sido seleccionado para la orden `{self.order_name}`!\nIngresa en {thread.mention} para continuar con la orden.')
 
-            tags += f'\n<@&861688529637474385>' # ?
+            tags += f'**Supplier:** <@{order_info[len(order_info) - 1]}>\n<@&861688529637474385>'
 
             embed = order_created_embed(order_info, boosters)
 

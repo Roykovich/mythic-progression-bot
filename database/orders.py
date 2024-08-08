@@ -48,5 +48,5 @@ def check_if_booster_is_already_in_order(order_id, user_id):
     return booster[0]
         
 def get_order_info(order_id):
-    order = db.execute('SELECT order_id, order_name, description, amount, payment, boostmode, region, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, custom_name, battletag FROM orders WHERE order_id = ?', (order_id,)).fetchone()
+    order = db.execute('SELECT order_id, order_name, description, amount, payment, boostmode, region, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, custom_name, battletag, creator_id FROM orders WHERE order_id = ?', (order_id,)).fetchone()
     return order

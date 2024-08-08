@@ -1,5 +1,4 @@
 import discord
-import random # ! Esto es solo para emular el valor del raiderio
 from database.applicants import update_booster_applicants_fields
 from database.orders import check_order_full, get_order_info
 from utils.embed_order import order_created_embed
@@ -81,7 +80,7 @@ class OrderCommandView(discord.ui.View):
 
         if boosters:
             await interaction.response.send_message('Orden completa', ephemeral=True)
-            thread = await staff_channel.create_thread(name=f'# Order - {self.order_id}', reason='Orden Iniciada', invitable=False)
+            thread = await staff_channel.create_thread(name=f'Order - {self.order_id}', reason='Orden Iniciada', invitable=False)
             order_info = get_order_info(self.order_id)
 
             tags = ''
@@ -95,7 +94,7 @@ class OrderCommandView(discord.ui.View):
 
             embed = order_created_embed(order_info, boosters)
 
-            await thread.send(f'Orden [{self.order_id}] iniciada\n\n{tags}', embed=embed)
+            await thread.send(f'# Orden [{self.order_id}] iniciada\n\n{tags}', embed=embed)
             return
         
         await interaction.response.send_message('La orden no está completa', ephemeral=True)

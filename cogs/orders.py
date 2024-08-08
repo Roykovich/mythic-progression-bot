@@ -5,6 +5,7 @@ from discord import app_commands
 
 from utils.load_region_servers import realms_autocomplete
 from utils.load_spec_and_class import classes_and_spec_autocomplete
+from utils.load_orders_autocomplete import orders_autocomplete
 from utils.embed_order import order_embed
 from utils.embed_order import staff_order_embed
 from views.view_order import OrderView
@@ -146,7 +147,7 @@ class Orders(commands.Cog):
         await orders_channel.send(f'<@443948776562884620> El usuario {interaction.user.mention} ha intentado crear una orden pero ha ocurrido un error: {error_message}')
 
     @app_commands.command(name='accept_applicant', description='Acepta un aplicante')
-    @app_commands.describe(order_id='ID de la orden')
+    @app_commands.autocomplete(order_id=orders_autocomplete)
     @app_commands.describe(user='Usuario')
     @app_commands.choices(role=[
         app_commands.Choice(name='tank', value='tank'),

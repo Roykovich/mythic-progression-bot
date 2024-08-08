@@ -13,7 +13,7 @@ def update_after_cancel(embed, order_id, role, accepted=False, applicant=None):
     update_staff_applicants_fields(embed, applications, role, accepted=accepted, applicant=applicant)
 
 class OrderView(discord.ui.View):
-    @discord.ui.button(label='Tank', emoji='<:Tank:1082086003113734214>', style=discord.ButtonStyle.grey)
+    @discord.ui.button(label='Tank', emoji='<:tank:1270969225871360010>', style=discord.ButtonStyle.grey)
     async def tank(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         order_id = self.order_id
@@ -41,7 +41,7 @@ class OrderView(discord.ui.View):
         await staff_message.edit(embed=embed, attachments=[])
         await booster_message.edit(embed=booster_embed, attachments=[])
 
-        await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:Tank:1082086003113734214> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
+        await interaction.user.send(f'Has aplicado correctamente a `{order_name}` como <:tank:1270969225871360010> **{role}**.\nEn unos instantes recibiras actualización a tu aplicación.')
         
 
     @discord.ui.button(label='Healer', emoji='<:Heal:1082086361936449627>', style=discord.ButtonStyle.grey)

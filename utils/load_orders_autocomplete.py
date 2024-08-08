@@ -27,4 +27,5 @@ async def orders_autocomplete(
     if not orders_id:
         orders_id.append(app_commands.Choice(name=current, value=current))
 
+    db.row_factory = None
     return orders_id

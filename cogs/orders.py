@@ -1,5 +1,6 @@
 import discord
 import typing
+import requests
 from discord.ext import commands
 from discord import app_commands
 
@@ -180,6 +181,45 @@ class Orders(commands.Cog):
         update_accepted_applicants_fields(embed, user.id, raiderio, role.value)
 
         await staff_message.edit(embed=embed, attachments=[])
+
+
+    @app_commands.command(name='pay_boosters', description='Acredita a los Boosters')
+    @app_commands.autocomplete(order_id=orders_autocomplete)
+    @app_commands.describe(booster1='Usuario')
+    @app_commands.describe(booster2='Usuario')
+    @app_commands.describe(booster3='Usuario')
+    @app_commands.describe(booster4='Usuario')
+    async def pay_booster(self,
+        interaction: discord.Interaction,
+        order_id: str,
+        booster1: typing.Optional[discord.User],
+        booster2: typing.Optional[discord.User],
+        booster3: typing.Optional[discord.User],
+        booster4: typing.Optional[discord.User]
+    ):
+        ...
+        # await interaction.response.send_message(f'Boosters acreditados correctamente', ephemeral=True)
+        # boosters = [26, 27, 59, 75]
+
+        # for booster in boosters:
+        #     response = requests.get(f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{booster}?consumer_key={settings.WP_SWINGS_CLIENT}&consumer_secret={settings.WP_SWINGS_SECRET}').json()
+        #     print(response)
+
+        # for booster in boosters:
+        #     data = {
+        #         'amount': 5,
+        #         'action': 'credit',
+        #         'transaction_detail': 'Pago por boosteo (?)',
+        #         'consumer_key': settings.WP_SWINGS_CLIENT,
+        #         'consumer_secret': settings.WP_SWINGS_SECRET,
+        #         'payment_method': 'Petro'
+        #     }
+        #     headers = {
+        #         'Content-Type': 'application/json'
+        #     }           
+        #     response = requests.put(url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{booster}', json=data, headers=headers)
+        #     json = response.json()
+        #     print(json)
 
 
 

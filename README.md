@@ -32,7 +32,9 @@ pip install -U discord.py requests
 - [ ] Puntos de booster a traves de la API de googlesheets y cantidad de ordenes completadas con la API de googlesheets
 - [x] Implementacion de la API del monedero
 - [ ] Implementacion de consulta de saldo al bot. Recomendacion: solamente por DM. Hay un error donde no te muestra los datos actuales. Ver si es que se cachea o esta diseñado de esa manera y me jodi
+- [ ] Agregar comando de registrar usuario con el id del monedero
 - [ ] Agregar caracteristica: Si la orden fue creada por un supplier, a la hora de acreditar el pago se debe utilizar el monto en la DB y en caso en que los calculos hecho por ella no sean correctos, llamar al staff
+- [ ] Comando para registrar los personas de raider io y comando para revisar el perfil
 - [ ] Crear sistema para verificar el progreso de la orden. Ejemplo: Si son 4 runs, que al enviar con un mensaje (o un slash command) una imagen, el bot detecte que es una captura del progreso de la 1era, 2da ... runs
 - [ ] Agregar un estado a la view de los booster, para revertir el boton de full de ser necesario la busqueda de otro booster
 

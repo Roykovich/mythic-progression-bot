@@ -270,16 +270,30 @@ class Orders(commands.Cog):
     @app_commands.describe(booster2='Usuario')
     @app_commands.describe(booster3='Usuario')
     @app_commands.describe(booster4='Usuario')
+    @app_commands.describe(booster5='Usuario')
+    @app_commands.describe(booster6='Usuario')
+    @app_commands.describe(booster7='Usuario')
+    @app_commands.describe(booster8='Usuario')
+    @app_commands.describe(booster9='Usuario')
+    @app_commands.describe(booster10='Usuario')
+    @app_commands.describe(amount='Cantidad a pagar')
     async def pay_booster(self,
         interaction: discord.Interaction,
         order_id: str,
         booster1: typing.Optional[discord.User],
         booster2: typing.Optional[discord.User],
         booster3: typing.Optional[discord.User],
-        booster4: typing.Optional[discord.User]
+        booster4: typing.Optional[discord.User],
+        booster5: typing.Optional[discord.User],
+        booster6: typing.Optional[discord.User],
+        booster7: typing.Optional[discord.User],
+        booster8: typing.Optional[discord.User],
+        booster9: typing.Optional[discord.User],
+        booster10: typing.Optional[discord.User],
+        amount: int
     ):
         ...
-        # await interaction.response.send_message(f'Boosters acreditados correctamente', ephemeral=True)
+        # await interaction.response.defer()
         # boosters = [26, 27, 59, 75]
 
         # for booster in boosters:

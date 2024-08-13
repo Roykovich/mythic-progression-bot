@@ -15,6 +15,7 @@ from views.view_command_order import OrderCommandView
 
 from database.orders import create_order, accept_applicant_to_order
 from database.applicants import update_accepted_applicants_fields
+from database.booster import get_wallet_by_user_id
 
 from utils.get_message import get_message
 
@@ -280,7 +281,7 @@ class Orders(commands.Cog):
     async def pay_booster(self,
         interaction: discord.Interaction,
         order_id: str,
-        booster1: typing.Optional[discord.User],
+        booster1: discord.User,
         booster2: typing.Optional[discord.User],
         booster3: typing.Optional[discord.User],
         booster4: typing.Optional[discord.User],
@@ -292,29 +293,37 @@ class Orders(commands.Cog):
         booster10: typing.Optional[discord.User],
         amount: int
     ):
-        ...
-        # await interaction.response.defer()
-        # boosters = [26, 27, 59, 75]
+        await interaction.response.defer()
+        boosters = [booster1, booster2, booster3, booster4, booster5, booster6, booster7, booster8, booster9, booster10]
 
-        # for booster in boosters:
-        #     response = requests.get(f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{booster}?consumer_key={settings.WP_SWINGS_CLIENT}&consumer_secret={settings.WP_SWINGS_SECRET}').json()
-        #     print(response)
+        get_wallets = await get_wallet_by_user_id(boosters)
+        print(get_wallets)
 
-        # for booster in boosters:
-        #     data = {
-        #         'amount': 5,
-        #         'action': 'credit',
-        #         'transaction_detail': 'Pago por boosteo (?)',
-        #         'consumer_key': settings.WP_SWINGS_CLIENT,
-        #         'consumer_secret': settings.WP_SWINGS_SECRET,
-        #         'payment_method': 'Petro'
-        #     }
-        #     headers = {
-        #         'Content-Type': 'application/json'
-        #     }           
-        #     response = requests.put(url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{booster}', json=data, headers=headers)
-        #     json = response.json()
-        #     print(json)
+        for wallet_id in get_wallets:
+            response = requests.get(f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id}?consumer_key={settings.WP_SWINGS_CLIENT}&consumer_secret={settings.WP_SWINGS_SECRET}').json()
+            print(response)
+
+        # Agregar una busqueda de la id del creador de la orden para colocarlo en payment_method
+
+        for wallet_id in get_wallets:
+            data = {
+                'amount': amount,
+                'action': 'credit',
+                'transaction_detail': f'Order-{order_id}',
+                'consumer_key': settings.WP_SWINGS_CLIENT,
+                'consumer_secret': settings.WP_SWINGS_SECRET,
+                'payment_method': 'Acreditado por supplier'
+            }
+            headers = {
+                'Content-Type': 'application/json'
+            }           
+            response = requests.put(url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id}', json=data, headers=headers)
+            json = response.json()
+            # ! Ver si podemos utilizar las transactions_id en el mensaje del comando
+            print(json)
+
+        # Agregar un logger para guardar los pagos realizados
+        await interaction.followup.send(f'Boosters pagados correctamente')
 
 async def setup(bot):
     await bot.add_cog(Orders(bot))

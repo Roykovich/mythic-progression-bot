@@ -23,17 +23,15 @@ pip install -U discord.py requests
 ```
 
 ## Todo
-- [ ] ~~Al cancelar aplicacion, el contador de booster aplicando debe bajar~~
-- [ ] ~~Aplicar como team. Idea: Modal donde puedas taggear a las personas que son de tu team. Crear una tabla donde se pueda ver quienes son parte del team, que esta tenga la id de la orden, los id de los taggeados y crear un comando para ver quienes son y asi validarlos y poder aceptarlos~~
 - [x] Al cancelar aplicacion, se deben eliminar de la lista de aceptados
 - [x] Al cancelar el booster, mensaje ephemeral de cancelacion de la aplicacion
 - [x] Autocompletado en las IDs del comando de aceptar aplicantes
-- [ ] Verificacion de personajes con raiderio
-- [ ] Puntos de booster a traves de la API de googlesheets y cantidad de ordenes completadas con la API de googlesheets
 - [x] Implementacion de la API del monedero
-- [ ] Implementacion de consulta de saldo al bot. Recomendacion: solamente por DM. Hay un error donde no te muestra los datos actuales. Ver si es que se cachea o esta diseñado de esa manera y me jodi
-- [ ] Agregar comando de registrar usuario con el id del monedero
-- [ ] Agregar caracteristica: Si la orden fue creada por un supplier, a la hora de acreditar el pago se debe utilizar el monto en la DB y en caso en que los calculos hecho por ella no sean correctos, llamar al staff
+- [x] Agregar comando de registrar usuario con el id del monedero
+- [x] Agregar caracteristica: Si la orden fue creada por un supplier, a la hora de acreditar el pago se debe utilizar el monto en la DB y en caso en que los calculos hecho por ella no sean correctos, llamar al staff (SOLVED: UTILIZAR EL MISMO COMANDO pay_booster)
+- [ ] Agregar comando para añadir personajes con raiderio a la DB (agregar el color o emoji? dependiendo del raiderio para reeamplazar la funcion ya existe)
+- [ ] Puntos de booster a traves de la API de googlesheets y cantidad de ordenes completadas con la API de googlesheets
+- [ ] Agregar al comando register insercion de datos en googlesheets (son dos spreadsheets, consultar con Miguel)
 - [ ] Comando para registrar los personas de raider io y comando para revisar el perfil
 - [ ] Crear sistema para verificar el progreso de la orden. Ejemplo: Si son 4 runs, que al enviar con un mensaje (o un slash command) una imagen, el bot detecte que es una captura del progreso de la 1era, 2da ... runs
 - [ ] Agregar un estado a la view de los booster, para revertir el boton de full de ser necesario la busqueda de otro booster

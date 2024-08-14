@@ -12,11 +12,15 @@ async def get_wallet_by_user_id(boosters):
     wallets_ids = []
     for booster in boosters:
         if not booster:
-            print('Booster is None')
+            print('[!] Booster is None')
             continue
-        print(booster.id)
-        wallet = db.execute('SELECT wallet_id FROM boosters WHERE user_id = ?', (booster.id,)).fetchone()
-        print(wallet)
-        wallets_ids.append(wallet[0])
+        print(f'[+] Booster: {booster} ({booster.id})')
+        wallet = db.execute('SELECT wallet_id, user_id FROM boosters WHERE user_id = ?', (booster.id,)).fetchone()
+        print(f'[+] Wallet encontrada: {wallet}')
+        if not wallet:
+            print('[!] Wallet not found')
+            continue
+
+        wallets_ids.append(wallet)
 
     return wallets_ids

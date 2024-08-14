@@ -291,17 +291,20 @@ class Orders(commands.Cog):
         booster8: typing.Optional[discord.User],
         booster9: typing.Optional[discord.User],
         booster10: typing.Optional[discord.User],
-        amount: int
+        amount: float
     ):
         await interaction.response.defer()
         boosters = [booster1, booster2, booster3, booster4, booster5, booster6, booster7, booster8, booster9, booster10]
 
         get_wallets = await get_wallet_by_user_id(boosters)
-        print(get_wallets)
+        print(f'[+] Wallets: {get_wallets}')
 
-        for wallet_id in get_wallets:
-            response = requests.get(f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id}?consumer_key={settings.WP_SWINGS_CLIENT}&consumer_secret={settings.WP_SWINGS_SECRET}').json()
-            print(response)
+        if len(get_wallets) < 1:
+            await interaction.followup.send(f'No se encontraron wallets para los boosters indicados')
+            return
+
+        transactions = []
+        guild = await self.bot.fetch_guild(settings.GUILD_ID.id)
 
         # Agregar una busqueda de la id del creador de la orden para colocarlo en payment_method
 
@@ -317,13 +320,25 @@ class Orders(commands.Cog):
             headers = {
                 'Content-Type': 'application/json'
             }           
-            response = requests.put(url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id}', json=data, headers=headers)
+            response = requests.put(url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id[0]}', json=data, headers=headers)
             json = response.json()
             # ! Ver si podemos utilizar las transactions_id en el mensaje del comando
-            print(json)
+            if json['response'] == 'success':
+                print(f'[+] Transaction {json['response']}\t| Balance: {json['balance']}\t\t| ID: {json['transaction_id']}')
+                transactions.append({
+                    'id': json['transaction_id'],
+                    'booster': await guild.fetch_member(wallet_id[1]),
+                })
+
+        codeblock = '```ansi\n'
+
+        for transaction in transactions:
+            codeblock += f'[2;33m[2;34m[?][0m[2;33m[0m Booster: [2;36m{transaction['booster'].nick if transaction['booster'].nick is not None else transaction['booster'].global_name}[0m\n[2;34m[2;31m[!][0m[2;34m[0m Transaction ID: [2;36m{transaction['id']}[0m\n[2;31m[2;32m[+][0m[2;31m[0m Amount: $[2;36m{amount}[0m\n\n'
+        
+        codeblock += '\n```'
 
         # Agregar un logger para guardar los pagos realizados
-        await interaction.followup.send(f'Boosters pagados correctamente')
+        await interaction.followup.send(f'Boosters pagados correctamente:\n{codeblock}')
 
 async def setup(bot):
     await bot.add_cog(Orders(bot))

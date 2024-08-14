@@ -57,7 +57,7 @@ class OrderCommandView(discord.ui.View):
         thread_view = self.thread_view
         user_id = interaction.user.id
         role = 'dps'
-        
+
         button = thread_view.children[2]
         button.disabled = True
 
@@ -74,11 +74,20 @@ class OrderCommandView(discord.ui.View):
         order_started_channel = self.bot.get_channel(settings.ORDER_STARTED_ID)
         boosters = check_order_full(self.order_id)
 
-        # Esto es para los emojis de los roles
-        # role_emojis = ['<:tank:1270969225871360010>', '<:Heal:1082086361936449627>', '<:dps:1257157322044608684>', '<:dps:1257157322044608684>']
+        # Con esto accedemos a los mensajes del los Staff y de los Boosters
+        command_message = await get_message(self.bot, self.message_id)
+        booster_message = await get_message(self.bot, self.thread_message, self.thread_message)
 
         if boosters:
             await interaction.response.send_message('Orden completa', ephemeral=True)
+            
+            # Todo esto es para borrar los botones de ambos mensajes
+            self.clear_items()
+            self.thread_view.clear_items()
+            await command_message.edit(view=self)
+            await booster_message.edit(view=self.thread_view)
+
+            
             thread = await order_started_channel.create_thread(name=f'Order - {self.order_id}', reason='Orden Iniciada', invitable=False)
             order_info = get_order_info(self.order_id)
             tags = f'<@{order_info[len(order_info) - 1]}><@&{settings.ROLE_SERVER_STAFF_ID}>\n'

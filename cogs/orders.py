@@ -1,3 +1,4 @@
+import math
 import discord
 import typing
 import requests
@@ -20,10 +21,6 @@ from database.booster import get_wallet_by_user_id
 from utils.get_message import get_message
 
 import settings
-
- # TODO:
-    # - Agregar que roles queremos taggear a la hora de crear una orden
-    # - Agregar un campo para aplicar personajes especificas
 
 class Orders(commands.Cog):
     def __init__(self, bot):
@@ -69,7 +66,6 @@ class Orders(commands.Cog):
         app_commands.Choice(name='Horda', value='horde')
     ])
     @app_commands.autocomplete(realm=realms_autocomplete)
-    # @app_commands.checks.has_role(int(settings.ROLE_SERVER_STAFF_ID))
     async def orderslash(self,
         interaction: discord.Interaction,
         order_name: str,
@@ -223,8 +219,7 @@ class Orders(commands.Cog):
         # if interaction: 
         #     await interaction.response.send_message(f'No tienes permisos para crear una orden', ephemeral=True)
         
-        # TODO cambiar el ID del usuario de Miguel a id de server staff
-        await orders_channel.send(f'<@{settings.ROLE_SERVER_STAFF_ID}> El usuario {interaction.user.mention} ha intentado crear una orden pero ha ocurrido un error: {error_message}')
+        await orders_channel.send(f'<@&{settings.ROLE_SERVER_STAFF_ID}> El usuario {interaction.user.mention} ha intentado crear una orden pero ha ocurrido un error: {error_message}')
 
     @app_commands.command(name='accept_applicant', description='Acepta un aplicante')
     @app_commands.autocomplete(order_id=orders_autocomplete)
@@ -242,7 +237,7 @@ class Orders(commands.Cog):
         role: app_commands.Choice[str],
         ):
         order = accept_applicant_to_order(order_id, user.id, role.value)
-        await interaction.response.send_message(f'Aplicante aceptado correctamente', ephemeral=True)
+        await interaction.response.send_message(f'Aplicante <@{user.id}> aceptado correctamente', ephemeral=True)
         if role.value == 'tank':
             raiderio = order[6]
         elif role.value == 'healer':
@@ -277,7 +272,8 @@ class Orders(commands.Cog):
     @app_commands.describe(booster8='Usuario')
     @app_commands.describe(booster9='Usuario')
     @app_commands.describe(booster10='Usuario')
-    @app_commands.describe(amount='Cantidad a pagar')
+    @app_commands.describe(dollars='Dolares a pagar')
+    @app_commands.describe(cents='Centavos a pagar. [Si es 12.3 coloca 12 y 30 || Si es 12.03 coloca 12 y 3]')
     async def pay_booster(self,
         interaction: discord.Interaction,
         order_id: str,
@@ -291,10 +287,22 @@ class Orders(commands.Cog):
         booster8: typing.Optional[discord.User],
         booster9: typing.Optional[discord.User],
         booster10: typing.Optional[discord.User],
-        amount: float
+        dollars: app_commands.Range[int, 0, 200],
+        cents: app_commands.Range[int, 0, 99],
     ):
         await interaction.response.defer()
+        # Guardamos a los Boosters en una lista para luego loopear en ella a la hora de realizar los pagos
         boosters = [booster1, booster2, booster3, booster4, booster5, booster6, booster7, booster8, booster9, booster10]
+        # Guardamos la cantidad correcta a pagar
+        new_amount = float(f'{dollars}.{cents if cents > 9 else f"0{cents}"}') 
+        # Accreditor
+        accreditor = interaction.user.nick if interaction.user.nick is not None else interaction.user.global_name
+
+        # Si el monto a pagar es mayor a 200 se redondea a 200
+        # Ya que la unica forma de que pase de 200 es que se pase de 0.1 centavos hacia 0.99
+        if new_amount > 200:
+            new_amount = float(math.floor(new_amount))
+            await interaction.followup.send(f'El monto máximo a pagar es de `$200`', ephemeral=True)
 
         get_wallets = await get_wallet_by_user_id(boosters)
         print(f'[+] Wallets: {get_wallets}')
@@ -306,23 +314,25 @@ class Orders(commands.Cog):
         transactions = []
         guild = await self.bot.fetch_guild(settings.GUILD_ID.id)
 
-        # Agregar una busqueda de la id del creador de la orden para colocarlo en payment_method
-
         for wallet_id in get_wallets:
             data = {
-                'amount': amount,
+                'amount': new_amount,
                 'action': 'credit',
                 'transaction_detail': f'Order-{order_id}',
                 'consumer_key': settings.WP_SWINGS_CLIENT,
                 'consumer_secret': settings.WP_SWINGS_SECRET,
-                'payment_method': 'Acreditado por supplier'
+                'payment_method': f'Acreditado por {accreditor}'
             }
             headers = {
                 'Content-Type': 'application/json'
             }           
-            response = requests.put(url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id[0]}', json=data, headers=headers)
+            response = requests.put(
+                url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id[0]}', 
+                json=data, 
+                headers=headers
+            )
             json = response.json()
-            # ! Ver si podemos utilizar las transactions_id en el mensaje del comando
+
             if json['response'] == 'success':
                 print(f'[+] Transaction {json['response']}\t| Balance: {json['balance']}\t\t| ID: {json['transaction_id']}')
                 transactions.append({
@@ -333,7 +343,7 @@ class Orders(commands.Cog):
         codeblock = '```ansi\n'
 
         for transaction in transactions:
-            codeblock += f'[2;33m[2;34m[?][0m[2;33m[0m Booster: [2;36m{transaction['booster'].nick if transaction['booster'].nick is not None else transaction['booster'].global_name}[0m\n[2;34m[2;31m[!][0m[2;34m[0m Transaction ID: [2;36m{transaction['id']}[0m\n[2;31m[2;32m[+][0m[2;31m[0m Amount: $[2;36m{amount}[0m\n\n'
+            codeblock += f'[2;33m[2;34m[?][0m[2;33m[0m Booster: [2;36m{transaction['booster'].nick if transaction['booster'].nick is not None else transaction['booster'].global_name}[0m\n[2;34m[2;31m[!][0m[2;34m[0m Transaction ID: [2;36m{transaction['id']}[0m\n[2;31m[2;32m[+][0m[2;31m[0m Amount: $[2;36m{new_amount}[0m\n\n'
         
         codeblock += '\n```'
 

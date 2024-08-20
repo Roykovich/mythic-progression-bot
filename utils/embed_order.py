@@ -44,7 +44,7 @@ def order_embed(region, order_name, description, amount, boostmode, traders, key
     embed.add_field(name='Keystone Lvl', value=f'<:Key:1105410551271653487> {keystone_level}+', inline=True)
     embed.add_field(name='<:tank:1270969225871360010> Tank (0)', value=f'0/1', inline=True)
     embed.add_field(name='<:Heal:1082086361936449627> Healer (0)', value=f'0/1', inline=True)
-    embed.add_field(name='<:Dps:1082087375485812747> DPS (0)', value=f'0/2', inline=True)
+    embed.add_field(name='<:dps:1257157322044608684> DPS (0)', value=f'0/2', inline=True)
     embed.set_thumbnail(url='attachment://logo_mp.png')
     embed.set_footer(text=f'Price: {amount} | {'USD' if payment.value == 'usd' else 'Gold'}')
 

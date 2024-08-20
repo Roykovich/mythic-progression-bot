@@ -24,3 +24,19 @@ async def get_wallet_by_user_id(boosters):
         wallets_ids.append(wallet)
 
     return wallets_ids
+
+async def register_booster_character(booster_id, pj):
+    new_pj_id = uuid.uuid4()
+    name = pj['name']
+    realm = pj['realm']
+    class_ = pj['class']
+    spec = pj['active_spec_name']
+    role = pj['active_spec_role']
+    faction = pj['faction']
+    tank = pj['mythic_plus_scores_by_season'][0]['scores']['tank']
+    healer = pj['mythic_plus_scores_by_season'][0]['scores']['healer']
+    dps = pj['mythic_plus_scores_by_season'][0]['scores']['dps']
+    ilvl = pj['gear']['item_level_equipped']
+
+    db.execute('INSERT INTO characters (id, user_id, name, realm, class, spec, role, faction, tank_raiderio, healer_raiderio, dps_raiderio, ilvl) VALUES (?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)', (new_pj_id, booster_id, name, realm, class_, spec, role, faction, tank, healer, dps, ilvl))
+    print(f'Personaje [{name}] registrado con éxito')

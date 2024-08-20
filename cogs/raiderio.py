@@ -4,29 +4,54 @@ from discord.ext import commands
 from discord import app_commands
 
 from utils.load_region_servers import realms_autocomplete
+from utils.embed_raiderio import raiderio_profile
 
-URL = "https://raider.io/api/v1/characters/profile?region=us&realm=Bleeding%20Hollow&name="
-URL2 = "https://raider.io/api/v1/characters/profile?"
+from views.view_register_raiderio import RegisterRaiderioView
+
+URL = "https://raider.io/api/v1/characters/profile?"
 MYTHIC_SUFIX = "&fields=mythic_plus_scores_by_season%3Acurrent,gear"
 
 class Raiderio(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name='raiderio', description='Busca un jugador en Raider.io')
+    @app_commands.command(name='search-raiderio', description='Busca un jugador en Raider.io')
     @app_commands.choices(region=[
         app_commands.Choice(name='us', value="us")
     ])
     @app_commands.autocomplete(realm=realms_autocomplete)
     @app_commands.describe(name="Nombre del jugador")
     async def raiderioslash(self, interaction: discord.Interaction, region: app_commands.Choice[str], realm: str, name: str):
-        response = requests.get(f'{URL2}region={region.value}&realm={realm.replace(" ", "%20")}&name={name}{MYTHIC_SUFIX}').json()
-        print(response)
-        await interaction.response.send_message(f'Buscando a {name} en Raider.io\n**raza:** {response['race']}\n**clase:** {response['class']}\n**Especializacion activa:** {response['active_spec_name']}\n')
-        await interaction.channel.send(f'**Puntuacion de mazmorras:** {response["mythic_plus_scores_by_season"][0]["scores"]["all"]}\n**Tanque:** {response["mythic_plus_scores_by_season"][0]["scores"]["tank"]}\n**Sanador:** {response["mythic_plus_scores_by_season"][0]["scores"]["healer"]}\n**DPS:** {response["mythic_plus_scores_by_season"][0]["scores"]["dps"]}\n**ilvl:** {response["gear"]["item_level_equipped"]}')
+        pj = requests.get(f'{URL}region={region.value}&realm={realm.replace(" ", "%20")}&name={name}{MYTHIC_SUFIX}').json()
+        embed = raiderio_profile(pj)
+        await interaction.response.send_message(f'Buscando a {name} en Raider.io')
+        await interaction.channel.send(content='', embed=embed)
 
-        # embed = discord.Embed()
 
+    @app_commands.command(name='register-raiderio', description='Registrar un pj con Raider.io')
+    @app_commands.choices(region=[
+        app_commands.Choice(name='us', value="us")
+    ])
+    @app_commands.autocomplete(realm=realms_autocomplete)
+    @app_commands.describe(name="Nombre del jugador")
+    async def register_raiderio(
+        self,
+        interaction: discord.Interaction,
+        region: app_commands.Choice[str],
+        realm: str,
+        name: str
+    ):
+        pj = requests.get(f'{URL}region={region.value}&realm={realm.replace(" ", "%20")}&name={name}{MYTHIC_SUFIX}').json()
+
+        embed = raiderio_profile(pj)
+        view = RegisterRaiderioView(timeout=None)
+        view.booster_id = interaction.user.id
+        view.bot = self.bot
+        view.pj = pj
+
+        await interaction.response.send_message(content='', embed=embed, view=view)
+
+        view.original_message = await interaction.original_response()
 
 async def setup(bot):
     await bot.add_cog(Raiderio(bot))

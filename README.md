@@ -29,7 +29,7 @@ pip install -U discord.py requests
 - [x] Implementacion de la API del monedero
 - [x] Agregar comando de registrar usuario con el id del monedero
 - [x] Agregar caracteristica: Si la orden fue creada por un supplier, a la hora de acreditar el pago se debe utilizar el monto en la DB y en caso en que los calculos hecho por ella no sean correctos, llamar al staff (SOLVED: UTILIZAR EL MISMO COMANDO pay_booster)
-- [ ] Agregar comando para añadir personajes con raiderio a la DB (agregar el color o emoji? dependiendo del raiderio para reeamplazar la funcion ya existe)
+- [x] Agregar comando para añadir personajes con raiderio a la DB (agregar el color o emoji? dependiendo del raiderio para reeamplazar la funcion ya existe)
 - [ ] Puntos de booster a traves de la API de googlesheets y cantidad de ordenes completadas con la API de googlesheets
 - [ ] Agregar al comando register insercion de datos en googlesheets (son dos spreadsheets, consultar con Miguel)
 - [ ] Comando para revisar el perfil como Booster (donde se pueden ver los Booster Points y los personajes registrados)
@@ -43,7 +43,7 @@ pip install -U discord.py requests
 - [ ] Funciones modulares para los botones full y los de aplicacion de booster
 - [ ] Funciones para aplicantes y ordenes de la DB
 - [ ] Agregar documentacion y comentarios
-- [ ] Cambiar el naming. Hay al menos 3 constantes: Staff, Booster y Order
+- [ ] Cambiar el naming. Hay al menos 3 constantes: Staff, Booster, Recruitment y Order
 - [ ] Ver si el SelectMenu funciona como dropdown para los botones en el embed de los booster para DPS, TANK y HEALER (para elegir especializacion como Paladin Retry, Holy o Protection) SI SE PUEDE, SE CREARIA UN SEGUNDO EMBED DONDE AGARRE LOS DATOS DE LA DB DEL USUARIO EN CUESTION
 - [ ] Crear un .env_example
 - [ ] Agregar mensaje de feedback a la hora de darle a full

@@ -29,11 +29,11 @@ roles = {
     'second_dps': '<:dps:1257157322044608684>'
 }
 
-class Orders(commands.Cog):
+class DungeonOrders(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name='order', description='Crea una orden')
+    @app_commands.command(name='order_dungeon', description='Crea una orden de mazmorras')
     @app_commands.describe(order_name='Nombre de la orden')
     @app_commands.describe(order_id='ID de la orden')
     @app_commands.describe(description='Descripción de la orden')
@@ -354,4 +354,4 @@ class Orders(commands.Cog):
         await interaction.followup.send(f'Boosters pagados correctamente:\n{codeblock}')
 
 async def setup(bot):
-    await bot.add_cog(Orders(bot))
+    await bot.add_cog(DungeonOrders(bot))

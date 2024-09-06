@@ -103,3 +103,22 @@ def order_created_embed(order, boosters):
 
 
     return embed
+
+
+def misc_order_embed(order):
+    return
+    embed = discord.Embed(
+        title=f'({region.value}) {order_name}',
+        description=f'Description: {description}',
+        color=discord.Color.green()
+    )
+
+    embed.add_field(name='Region', value=order[6].capitalize(), inline=True)
+    embed.add_field(name='Type', value=order[5], inline=True)
+    embed.add_field(name='Players amount', value=order[7], inline=True)
+    embed.add_field(name='Streaming', value='Si' if order[11] == 0 else 'No', inline=True)
+    embed.add_field(name='Faction and Realm', value=f'{faction_choice(faction=order[13])} {order[13].capitalize()}\n<:quest:1107428715962572862> {order[14]}', inline=True)
+    embed.add_field(name='Class & Specification', value=f'{class_choice(order[12])} {order[12].replace(' -> ', ' - ')}', inline=True)
+    embed.set_footer(text=f'Price: {order[3]} | {'USD' if order[4] == 'usd' else 'Gold'}')
+
+    return embed

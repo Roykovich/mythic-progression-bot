@@ -95,7 +95,7 @@ class OrderCommandView(discord.ui.View):
             for i, booster_id in enumerate(boosters):
                 tags += f'<@{booster_id}>'
                 booster_dm = await self.bot.fetch_user(booster_id)
-                await booster_dm.send(f'¡Felicidades, has sido seleccionado para la orden `{self.order_name}`!\nIngresa en {thread.mention} para continuar con la orden.')
+                await booster_dm.send(f'¡La orden `{self.order_name}` empezará pronto!\nIngresa en {thread.mention} para recibir más información.')
 
             embed = order_created_embed(order_info, boosters)
 

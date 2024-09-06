@@ -75,7 +75,7 @@ class OrderCommandView(discord.ui.View):
         boosters = check_order_full(self.order_id)
 
         # Con esto accedemos a los mensajes del los Staff y de los Boosters
-        command_message = await get_message(self.bot, self.message_id)
+        staff_message = await get_message(self.bot, self.message_id)
         booster_message = await get_message(self.bot, self.thread_message, self.thread_message)
 
         if boosters:
@@ -84,7 +84,7 @@ class OrderCommandView(discord.ui.View):
             # Todo esto es para borrar los botones de ambos mensajes
             self.clear_items()
             self.thread_view.clear_items()
-            await command_message.edit(view=self)
+            await staff_message.edit(view=self)
             await booster_message.edit(view=self.thread_view)
 
             

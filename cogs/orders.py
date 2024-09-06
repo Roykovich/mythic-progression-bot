@@ -22,6 +22,13 @@ from utils.get_message import get_message
 
 import settings
 
+roles = {
+    'tank': '<:tank:1270969225871360010>',
+    'healer': '<:Heal:1082086361936449627>',
+    'first_dps': '<:dps:1257157322044608684>',
+    'second_dps': '<:dps:1257157322044608684>'
+}
+
 class Orders(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -156,14 +163,6 @@ class Orders(commands.Cog):
             view=staff_view, 
             wait=True
         )
-        # await interaction.response.send_message(
-        #     content=f'Order creada correctamente en {thread.thread.mention}', 
-        #     file=staff_file, 
-        #     embed=staff_embed, 
-        #     view=staff_view
-        # )
-        # ! Esto lo utilizamos para obtener el id del mensaje original de la orden
-        # order_message = await interaction.original_response()
         
         # Agregar los datos de la orden a la vista
         staff_view.order_id = order_id
@@ -237,7 +236,11 @@ class Orders(commands.Cog):
         role: app_commands.Choice[str],
         ):
         order = accept_applicant_to_order(order_id, user.id, role.value)
+        
         await interaction.response.send_message(f'Aplicante <@{user.id}> aceptado correctamente', ephemeral=True)
+        booster = await self.bot.fetch_user(user.id)
+        await booster.send(f'¡Felicidades, has sido aceptado en la orden `{order_id}` como {roles[role.value]}{role.value}!')
+
         if role.value == 'tank':
             raiderio = order[6]
         elif role.value == 'healer':

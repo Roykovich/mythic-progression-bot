@@ -1,4 +1,5 @@
 import discord
+from utils.gear_object_looper import get_lowest_ilvl
 
 icons = {
     'horde': '<:Horde:1136423725152084068>',
@@ -24,6 +25,8 @@ icons = {
 def raiderio_profile(pj):
     active_role = pj['active_spec_role'].lower()
 
+    lowest_ilvl = get_lowest_ilvl(pj['gear']['items'])
+
     embed = discord.Embed(
         title=f'{pj['name']} profile',
         url=f'{pj['profile_url']}',
@@ -33,7 +36,7 @@ def raiderio_profile(pj):
 
     embed.set_author(name=f'{pj['name']} - {pj['realm']} - {pj['region']} season: [{pj['mythic_plus_scores_by_season'][0]['season']}]')
     embed.set_thumbnail(url=f'{pj['thumbnail_url']}')
-    embed.add_field(name='<:bags:1107428757884637184> ilvl', value=pj['gear']['item_level_equipped'], inline=True)
+    embed.add_field(name=f'<:bags:1107428757884637184> ilvl [{pj['gear']['item_level_equipped']}]', value=f'{lowest_ilvl}', inline=True)
     embed.add_field(name='<:pvp:1136840776698048633> honorable kills', value=pj['honorable_kills'], inline=True)
     embed.add_field(name='<:Key:1105410551271653487> Mythic+ score', value=f'{pj["mythic_plus_scores_by_season"][0]["scores"]["all"]}', inline=True)
     embed.add_field(name='<:tank:1270969225871360010> Tank score', value=f'{pj["mythic_plus_scores_by_season"][0]["scores"]["tank"]}', inline=True)

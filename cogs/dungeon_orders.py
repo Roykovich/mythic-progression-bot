@@ -12,10 +12,10 @@ from utils.embed_order import order_embed
 from utils.embed_order import staff_order_embed
 from utils.role_tagger import give_all_booster_roles
 from views.view_order import OrderView
-from views.view_command_order import OrderCommandView
+from views.view_staff_dungeon_order import OrderStaffDungeonView
 
-from database.orders import create_order, accept_applicant_to_order
-from database.applicants import update_accepted_applicants_fields
+from database.orders_dungeon import create_order, accept_applicant_to_order
+from database.orders_dungeon_applicants import update_accepted_applicants_fields
 from database.booster import get_wallet_by_user_id
 
 from utils.get_message import get_message
@@ -155,7 +155,7 @@ class DungeonOrders(commands.Cog):
             payment
         )
          # Crear la vista de la orden
-        staff_view = OrderCommandView(timeout=None)
+        staff_view = OrderStaffDungeonView(timeout=None)
         order_message = await interaction.followup.send(
             content=f'Order creada correctamente en {thread.thread.mention}', 
             file=staff_file, 
@@ -172,30 +172,29 @@ class DungeonOrders(commands.Cog):
         staff_view.message_id = order_message.id
         staff_view.bot = self.bot
 
-        print(order_id)
-        # Creamos la orden
-        create_order(
-            order_id, 
-            order_message.id, 
-            thread.message.id, 
-            interaction.user.id, 
-            order_name, 
-            description, 
-            amount, 
-            payment.value, 
-            boostmode.value, 
-            region.value, 
-            traders.value, 
-            keystone_level, 
-            runs, 
-            timed.value, 
-            streaming.value, 
-            class_and_spec, 
-            faccion.value, 
-            realm, 
-            custom_name, 
-            battletag
-        )
+        # Creamos la orden haciendo la query a la database
+        create_order({
+            'order_id': order_id, 
+            'message_id': order_message.id, 
+            'thread_id': thread.message.id, 
+            'creator_id': interaction.user.id, 
+            'order_name': order_name, 
+            'description': description, 
+            'amount': amount, 
+            'payment': payment.value, 
+            'boostmode': boostmode.value, 
+            'region': region.value, 
+            'traders': traders.value, 
+            'keystone_level': keystone_level, 
+            'runs': runs, 
+            'timed': timed.value, 
+            'streaming': streaming.value, 
+            'class_and_spec': class_and_spec, 
+            'faccion': faccion.value, 
+            'realm': realm, 
+            'custom_name': custom_name, 
+            'battletag': battletag
+        })
         
         thread_view.order_id = order_id
         thread_view.message_id = order_message.id
@@ -220,7 +219,7 @@ class DungeonOrders(commands.Cog):
         
         await orders_channel.send(f'<@&{settings.ROLE_SERVER_STAFF_ID}> El usuario {interaction.user.mention} ha intentado crear una orden pero ha ocurrido un error: {error_message}')
 
-    @app_commands.command(name='accept_applicant', description='Acepta un aplicante')
+    @app_commands.command(name='accept_dungeon_applicant', description='Acepta un aplicante')
     @app_commands.autocomplete(order_id=orders_autocomplete)
     @app_commands.describe(user='Usuario')
     @app_commands.choices(role=[

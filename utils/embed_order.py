@@ -25,7 +25,6 @@ def class_choice(class_name):
     name = class_name.split(' -> ')[0]
     return icons[name]
 
-# TODO change this to a dynamic value
 def order_embed(region, order_name, description, amount, boostmode, traders, keystone_level, runs, timed, streaming, class_and_spec, faccion, realm, payment):
     embed = discord.Embed(
         title=f'({region.value}) {order_name}',
@@ -106,19 +105,66 @@ def order_created_embed(order, boosters):
 
 
 def misc_order_embed(order):
-    return
     embed = discord.Embed(
-        title=f'({region.value}) {order_name}',
-        description=f'Description: {description}',
+        title=f'({order['region']}) {order['order_name']}',
+        description=f'Description: {order['description']}',
         color=discord.Color.green()
     )
 
-    embed.add_field(name='Region', value=order[6].capitalize(), inline=True)
-    embed.add_field(name='Type', value=order[5], inline=True)
-    embed.add_field(name='Players amount', value=order[7], inline=True)
-    embed.add_field(name='Streaming', value='Si' if order[11] == 0 else 'No', inline=True)
-    embed.add_field(name='Faction and Realm', value=f'{faction_choice(faction=order[13])} {order[13].capitalize()}\n<:quest:1107428715962572862> {order[14]}', inline=True)
-    embed.add_field(name='Class & Specification', value=f'{class_choice(order[12])} {order[12].replace(' -> ', ' - ')}', inline=True)
-    embed.set_footer(text=f'Price: {order[3]} | {'USD' if order[4] == 'usd' else 'Gold'}')
+    embed.add_field(name='Region', value=order['region'], inline=True)
+    embed.add_field(name='Play mode', value=order['boostmode'], inline=True)
+    embed.add_field(name='Type', value=order['type'], inline=True)
+    embed.add_field(name='Streaming', value=order['streaming'], inline=True)
+    embed.add_field(name='Players', value=order['players'], inline=True)
+    embed.add_field(
+        name='Faction and Realm',
+        value=f'{faction_choice(faction=order['faccion'])} {order['faccion'].capitalize()}\n<:quest:1107428715962572862> {order['realm']}',
+        inline=True
+    )
+    embed.add_field(
+        name='Class & Specification', 
+        value=f'{class_choice(order['class_and_spec'])} {order['class_and_spec'].replace(' -> ', ' - ')}',
+        inline=True
+    )
+    embed.set_thumbnail(url='attachment://logo_mp.png')
+    embed.set_footer(text=f'Price: {order['amount']} | {'USD' if order['payment'] == 'usd' else 'Gold'}')
+
+    return embed
+
+def staff_order_misc_embed(order):
+    embed = discord.Embed(
+        title=f'({order['region']}) [#{order['order_id']}] {order['order_name']}',
+        description=f'Description: {order['description']}',
+        color=discord.Color.green()
+    )
+
+    embed.add_field(name='Region', value=order['region'], inline=True)
+    embed.add_field(name='Play mode', value=order['boostmode'], inline=True)
+    embed.add_field(name='Type', value=order['type'], inline=True)
+    embed.add_field(name='Streaming', value=order['streaming'], inline=True)
+    embed.add_field(name='Players', value=order['players'], inline=True)
+    embed.add_field(
+        name='Faction and Realm',
+        value=f'{faction_choice(faction=order['faccion'])} {order['faccion'].capitalize()}\n<:quest:1107428715962572862> {order['realm']}',
+        inline=True
+    )
+    embed.add_field(
+        name='Class & Specification', 
+        value=f'{class_choice(order['class_and_spec'])} {order['class_and_spec'].replace(' -> ', ' - ')}',
+        inline=True
+    )
+    embed.add_field(name='', value='', inline=True)
+    embed.add_field(name='', value='', inline=True)
+    embed.add_field(name='Boosters', value='N/A', inline=True)
+    embed.add_field(name='Boosters', value='N/A', inline=True)
+    embed.add_field(name='Boosters', value='N/A', inline=True)
+    embed.add_field(name='', value='', inline=True)
+    embed.add_field(name='', value='', inline=True)
+    embed.add_field(name='', value='', inline=True)
+    embed.add_field(name='Selected Boosters', value='N/A', inline=True)
+    embed.add_field(name='Selected Boosters', value='N/A', inline=True)
+    embed.add_field(name='Selected Boosters', value='N/A', inline=True)
+    embed.set_thumbnail(url='attachment://logo_mp.png')
+    embed.set_footer(text=f'Price: {order['amount']} | {'USD' if order['payment'] == 'usd' else 'Gold'}')
 
     return embed

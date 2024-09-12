@@ -1,7 +1,7 @@
 import discord
 import random # ! Esto es solo para emular el valor del raiderio
-from database.applicants import is_already_applicated, apply_to_order, cancel_application, update_staff_applicants_fields, update_applicants_fields
-from database.orders import check_if_booster_is_already_in_order
+from database.orders_dungeon_applicants import is_already_applicated, apply_to_order, cancel_application, update_staff_applicants_fields, update_applicants_fields
+from database.orders_dungeon import check_if_booster_is_already_in_order
 from utils.get_message import get_message
 
 import settings
@@ -122,14 +122,3 @@ class OrderView(discord.ui.View):
 
         await staff_message.edit(embed=embed, attachments=[])
         await interaction.response.send_message('Has cancelado tu aplicación correctamente.', ephemeral=True)
-
-        
-        
-        
-
-
-        
-
-
-        
-

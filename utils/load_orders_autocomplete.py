@@ -29,3 +29,24 @@ async def orders_autocomplete(
 
     db.row_factory = None
     return orders_id
+
+async def orders_misc_autocomplete(
+    interaction: discord.Interaction,
+    current: str,
+) -> typing.List[app_commands.Choice]:
+    if not current:
+        return []
+    
+    db.row_factory = lambda cursor, row: row[0]
+    orders = db.execute("SELECT order_id FROM misc_orders").fetchall()
+    orders_id = []
+    order_id_dictionary = get_orders_id(orders, current)
+
+    for order_id in order_id_dictionary:
+        orders_id.append(app_commands.Choice(name=order_id, value=order_id))
+
+    if not orders_id:
+        orders_id.append(app_commands.Choice(name=current, value=current))
+
+    db.row_factory = None
+    return orders_id

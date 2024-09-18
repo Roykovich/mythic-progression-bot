@@ -1,5 +1,5 @@
 import discord
-from utils.gear_object_looper import get_lowest_ilvl
+from utils.raiderio import get_lowest_ilvl
 
 icons = {
     'horde': '<:Horde:1136423725152084068>',

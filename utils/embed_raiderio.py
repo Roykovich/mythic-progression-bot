@@ -3,7 +3,7 @@ from utils.gear_object_looper import get_lowest_ilvl
 
 icons = {
     'horde': '<:Horde:1136423725152084068>',
-    'ally': '<:Ally:1136423791799586909>',
+    'alliance': '<:Ally:1136423791799586909>',
     'Mage': '<:Mage:1082090834725449839>',
     'Paladin': '<:Paladin:1082090835845328966>',
     'Hunter': '<:Hunter:1082090832699588628>',

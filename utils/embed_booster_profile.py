@@ -45,7 +45,7 @@ async def embed_booster_profile(booster, booster_points, booster_rank, character
     embed = discord.Embed(
         title=f'{booster.display_name} profile',
         color=booster_colours[booster_rank],
-        description=f'No se que agregar aca aiuda :c',
+        description=f'',
     )
 
     embed.set_thumbnail(url=booster.avatar.url)

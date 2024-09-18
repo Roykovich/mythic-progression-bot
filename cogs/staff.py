@@ -3,6 +3,7 @@ import requests
 from discord.ext import commands
 from discord import app_commands
 from database.booster import register_user
+from mythicsheets.booster import add_booster
 
 # from settings import WP_SWINGS_CLIENT, WP_SWINGS_SECRET
 # WP_SWINGS_URL = f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/users?consumer_key={WP_SWINGS_CLIENT}&consumer_secret={WP_SWINGS_SECRET}'
@@ -20,6 +21,7 @@ class Staff(commands.Cog):
         # agregar el id del monedero
         print(email, user.id, wallet_id)
         register_user(email, user.id, wallet_id)
+        await add_booster(email, user.display_name, user.id)
         await interaction.response.send_message(f'Usuario {user.mention} registrado con el email {email} y el wallet id {wallet_id}')
 
         

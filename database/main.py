@@ -93,6 +93,7 @@ def create_tables():
             id GUID PRIMARY KEY,
             user_id INTEGER,
             name TEXT,
+            region TEXT,
             realm TEXT,
             class TEXT,
             spec TEXT,

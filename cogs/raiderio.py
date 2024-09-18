@@ -7,9 +7,8 @@ from utils.load_region_servers import realms_autocomplete
 from utils.embed_raiderio import raiderio_profile
 
 from views.view_register_raiderio import RegisterRaiderioView
+from utils.raiderio import get_raiderio_profile
 
-URL = "https://raider.io/api/v1/characters/profile?"
-MYTHIC_SUFIX = "&fields=mythic_plus_scores_by_season%3Acurrent,gear"
 
 class Raiderio(commands.Cog):
     def __init__(self, bot):
@@ -22,7 +21,7 @@ class Raiderio(commands.Cog):
     @app_commands.autocomplete(realm=realms_autocomplete)
     @app_commands.describe(name="Nombre del jugador")
     async def raiderioslash(self, interaction: discord.Interaction, region: app_commands.Choice[str], realm: str, name: str):
-        pj = requests.get(f'{URL}region={region.value}&realm={realm.replace(" ", "%20")}&name={name}{MYTHIC_SUFIX}').json()
+        pj = get_raiderio_profile(region.value, realm.replace(" ", "%20"), name)
         embed = raiderio_profile(pj)
         await interaction.response.send_message(f'Buscando a {name} en Raider.io')
         await interaction.channel.send(content='', embed=embed)
@@ -41,7 +40,7 @@ class Raiderio(commands.Cog):
         realm: str,
         name: str
     ):
-        pj = requests.get(f'{URL}region={region.value}&realm={realm.replace(" ", "%20")}&name={name}{MYTHIC_SUFIX}').json()
+        pj = get_raiderio_profile(region.value, realm.replace(" ", "%20"), name)
 
         embed = raiderio_profile(pj)
         view = RegisterRaiderioView(timeout=None)

@@ -20,6 +20,8 @@ icons = {
     'TANK': '<:tank:1270969225871360010>',
     'HEALING': '<:Heal:1082086361936449627>',
     'DPS': '<:dps:1257157322044608684> ',
+    'bags': '<:bags:1107428757884637184>',
+    'quest': '<:quest:1107428715962572862>'
 }
 
 booster_colours = {
@@ -34,13 +36,18 @@ async def embed_booster_profile(booster, booster_points, booster_rank, character
     basic_info = ''
     pve_info = ''
     ilvl_info = ''
-    
+
     for character in characters:
-        pj = get_raiderio_profile(character[9], character[2].replace(" ", "%20"), character[1])
+        pj = get_raiderio_profile(character[6], character[2].replace(" ", "%20"), character[1])
+        io_total = pj['mythic_plus_scores_by_season'][0]['scores']['all']
+        dps = pj['mythic_plus_scores_by_season'][0]['scores']['dps']
+        tank = pj['mythic_plus_scores_by_season'][0]['scores']['tank']
+        healer = pj['mythic_plus_scores_by_season'][0]['scores']['healer']
         lowest_ilvl = get_lowest_ilvl(pj['gear']['items'])
+        
         basic_info += f'{icons[character[3]]} {character[3]}\n{icons[character[5]]} **__{character[1]}__**\n{icons[character[4]]} {character[2]}\n\n'
-        pve_info += f'{icons['DPS']} {character[6]}\n{ icons['TANK']} {character[7]}\n{icons['HEALING']} {character[8]}\n\n'
-        ilvl_info += f'<:bags:1107428757884637184> {pj["gear"]["item_level_equipped"]} ({lowest_ilvl})\n\n\n\n'
+        pve_info += f'{icons['DPS']} {dps}\n{ icons['TANK']} {tank}\n{icons['HEALING']} {healer}\n\n'
+        ilvl_info += f'{icons['quest']} {io_total}\n{icons['bags']} {pj["gear"]["item_level_equipped"]} ({lowest_ilvl})\n\n\n'
 
     embed = discord.Embed(
         title=f'{booster.display_name} profile',
@@ -53,7 +60,7 @@ async def embed_booster_profile(booster, booster_points, booster_rank, character
     embed.add_field(name='Points', value=f'<a:clap:1237923945068499036> {booster_points}', inline=True)
     embed.add_field(name='', value='', inline=True)
     embed.add_field(name='Basic info', value=basic_info, inline=True)
-    embed.add_field(name='Raiderio', value=pve_info, inline=True)
+    embed.add_field(name='Raiderio info', value=pve_info, inline=True)
     embed.add_field(name='Ilvl Info', value=ilvl_info, inline=True)
     
 

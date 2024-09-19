@@ -71,7 +71,6 @@ async def get_booster_profile(booster_id):
         SELECT
             boosters.booster_points, characters.name, characters.realm, 
             characters.class, characters.faction, characters.role,
-            characters.dps_raiderio, characters.tank_raiderio, characters.healer_raiderio,
             characters.region
         FROM boosters
         JOIN characters ON boosters.user_id = characters.user_id

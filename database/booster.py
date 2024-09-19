@@ -20,13 +20,14 @@ def register_user(email, user_id, wallet_id):
 async def get_wallet_by_user_id(boosters):
     wallets_ids = []
     for booster in boosters:
+        # Si no fue seleccionado un booster
         if not booster:
-            print('[!] Booster is None')
+            # print('[!] Booster is None')
             continue
 
         print(f'[+] Booster: {booster} ({booster.id})')
 
-        wallet = db.execute('SELECT wallet_id, user_id FROM boosters WHERE user_id = ?', (booster.id,))
+        wallet = db.execute('SELECT wallet_id, user_id FROM boosters WHERE user_id = ?', (booster.id,)).fetchone()
         
         print(f'[+] Wallet encontrada: {wallet}')
         if not wallet:

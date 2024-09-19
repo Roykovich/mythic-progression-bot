@@ -332,13 +332,12 @@ class DungeonOrders(commands.Cog):
                 url=f'https://mythicprogression.com/wp-json/wsfw-route/v1/wallet/{wallet_id[0]}', 
                 json=data, 
                 headers=headers
-            )
-            json = response.json()
+            ).json()
 
-            if json['response'] == 'success':
-                print(f'[+] Transaction {json['response']}\t| Balance: {json['balance']}\t\t| ID: {json['transaction_id']}')
+            if response['response'] == 'success':
+                print(f'[+] Transaction {response['response']}\t| Balance: {response['balance']}\t\t| ID: {response['transaction_id']}')
                 transactions.append({
-                    'id': json['transaction_id'],
+                    'id': response['transaction_id'],
                     'booster': await guild.fetch_member(wallet_id[1]),
                 })
 

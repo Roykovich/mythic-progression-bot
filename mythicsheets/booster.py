@@ -23,7 +23,6 @@ async def get_boosters(user_id):
 
         if user is not None:
             return values[user]
-
         else:
             return None
 

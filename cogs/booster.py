@@ -16,6 +16,14 @@ class Booster(commands.Cog):
     ):
         booster_characters = await get_booster_profile(interaction.user.id)
         booster_sheet = await get_boosters(user_id=str(interaction.user.id))
+        
+        if len(booster_characters) < 1:
+            await interaction.response.send_message("No tienes personajes registrados", ephemeral=True)
+            return    
+
+        if not booster_sheet:
+            await interaction.response.send_message("Aún no estas registrado. Pidele a un <@&861688529637474385> que te ayude a registrarte", ephemeral=True)
+            return
 
         embed = await embed_booster_profile(
             booster=interaction.user,
@@ -23,7 +31,7 @@ class Booster(commands.Cog):
             booster_rank=booster_sheet[4],
             characters=booster_characters
         )
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
         
 async def setup(bot):
     await bot.add_cog(Booster(bot))

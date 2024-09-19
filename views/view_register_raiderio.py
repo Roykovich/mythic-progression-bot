@@ -30,11 +30,3 @@ class RegisterRaiderioView(discord.ui.View):
         await self.original_message.edit(content='## ❌ Registro cancelado', view=self)
         await interaction.response.send_message('Registro cancelado', ephemeral=True)
         
-        
-
-
-        
-
-
-        
-

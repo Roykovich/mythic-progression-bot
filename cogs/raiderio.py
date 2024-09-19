@@ -24,7 +24,7 @@ class Raiderio(commands.Cog):
         pj = get_raiderio_profile(region.value, realm.replace(" ", "%20"), name)
         embed = raiderio_profile(pj)
         await interaction.response.send_message(f'Buscando a {name} en Raider.io')
-        await interaction.channel.send(content='', embed=embed)
+        await interaction.channel.send(content='', embed=embed, ephemeral=True)
 
 
     @app_commands.command(name='register-raiderio', description='Registrar un pj con Raider.io')
@@ -48,7 +48,7 @@ class Raiderio(commands.Cog):
         view.bot = self.bot
         view.pj = pj
 
-        await interaction.response.send_message(content='', embed=embed, view=view)
+        await interaction.response.send_message(content='', embed=embed, view=view, ephemeral=True)
 
         view.original_message = await interaction.original_response()
 

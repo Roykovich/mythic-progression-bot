@@ -212,10 +212,6 @@ class DungeonOrders(commands.Cog):
         else:
             error_message = error
             print(error)
-
-        # hay que ver con lo delos permisos
-        # if interaction: 
-        #     await interaction.response.send_message(f'No tienes permisos para crear una orden', ephemeral=True)
         
         await orders_channel.send(f'<@&{settings.ROLE_SERVER_STAFF_ID}> El usuario {interaction.user.mention} ha intentado crear una orden pero ha ocurrido un error: {error_message}')
 

@@ -19,10 +19,14 @@ class Staff(commands.Cog):
     async def register(self, interaction: discord.Interaction, email: str, user: discord.User, wallet_id: str):
         # El server staff tiene que registrar el usuario con este comando para poder
         # agregar el id del monedero
-        print(email, user.id, wallet_id)
-        register_user(email, user.id, wallet_id)
+        already_registered = register_user(email, user.id, wallet_id)
+
+        if already_registered:
+            await interaction.response.send_message(f'Usuario {user.mention} ya registrado.')
+            return
+
         await add_booster(email, user.display_name, user.id)
-        await interaction.response.send_message(f'Usuario {user.mention} registrado con el email {email} y el wallet id {wallet_id}')
+        await interaction.response.send_message(f'Usuario {user.mention} registrado correctamente.\n**Email:** `{email}`\n**Wallet id:** `{wallet_id}`')
 
         
 async def setup(bot):

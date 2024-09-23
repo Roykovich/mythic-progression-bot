@@ -4,6 +4,12 @@ from database.main import get_cursor
 db = get_cursor()
 
 def register_user(email, user_id, wallet_id):
+    is_registered = db.execute('SELECT COUNT(*) FROM boosters WHERE user_id = ?', (user_id,)).fetchone()
+
+    if is_registered[0] > 0:
+        print(f'[!] Usuario [{user_id}] ya registrado')
+        return 1
+
     new_user_id = uuid.uuid4()
     db.execute('''
         INSERT INTO boosters (
@@ -15,7 +21,8 @@ def register_user(email, user_id, wallet_id):
         new_user_id, user_id, email, wallet_id, 'Booster', 0
     ))
     
-    print(f'Usuario [{email}] creado con el id {new_user_id}')
+    print(f'Usuario [{user_id}] creado con el id {new_user_id}')
+    return 0
 
 async def get_wallet_by_user_id(boosters):
     wallets_ids = []

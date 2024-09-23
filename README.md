@@ -32,6 +32,7 @@ pip install -U discord.py requests
 - [ ] Crear sistema para verificar el progreso de la orden. Ejemplo: Si son 4 runs, que al enviar con un mensaje (o un slash command) una imagen, el bot detecte que es una captura del progreso de la 1era, 2da ... runs
 - [ ] Agregar botones para eliminar, actualizar datos de boosters (wallet id y esas cosas)
 - [ ] Agregar el saldo de la pagina en el perfil del Booster
+- [ ] Escribir funcion de cancelar en las ordenes miscelaneas
 
 ## Refactors
 - [ ] Funciones modulares para los botones full y los de aplicacion de booster

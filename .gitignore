@@ -4,3 +4,4 @@
 mythic.db
 credentials.json
 token.json
+/cogs/test.py

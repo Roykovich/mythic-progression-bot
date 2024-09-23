@@ -31,6 +31,7 @@ pip install -U discord.py requests
 - [x] Repartir el pago entre la cantidad de boosters en raid y en mitica (añadir verificacino de irregularidades a la hora de realizar el pago)
 - [ ] Crear sistema para verificar el progreso de la orden. Ejemplo: Si son 4 runs, que al enviar con un mensaje (o un slash command) una imagen, el bot detecte que es una captura del progreso de la 1era, 2da ... runs
 - [ ] Agregar botones para eliminar, actualizar datos de boosters (wallet id y esas cosas)
+- [ ] Agregar el saldo de la pagina en el perfil del Booster
 
 ## Refactors
 - [ ] Funciones modulares para los botones full y los de aplicacion de booster

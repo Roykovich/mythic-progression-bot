@@ -5,6 +5,8 @@ from database.booster import get_booster_profile
 from mythicsheets.booster import get_boosters
 from utils.embed_booster_profile import embed_booster_profile
 
+import settings
+
 class Booster(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -22,7 +24,7 @@ class Booster(commands.Cog):
             return    
 
         if not booster_sheet:
-            await interaction.response.send_message("Aún no estas registrado. Pidele a un <@&861688529637474385> que te ayude a registrarte", ephemeral=True)
+            await interaction.response.send_message(f"Aún no estas registrado. Pidele a un <@&{settings.ROLE_SERVER_STAFF_ID}> que te ayude a registrarte", ephemeral=True)
             return
 
         embed = await embed_booster_profile(

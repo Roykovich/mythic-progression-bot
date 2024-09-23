@@ -11,8 +11,8 @@ from utils.load_orders_autocomplete import orders_autocomplete
 from utils.embed_order import order_embed
 from utils.embed_order import staff_order_embed
 from utils.role_tagger import give_all_booster_roles
-from views.view_order import OrderView
-from views.view_staff_dungeon_order import OrderStaffDungeonView
+from views.orders_dungeon_booster import OrderView
+from views.orders_dungeon_staff import OrderStaffDungeonView
 
 from database.orders_dungeon import create_order, accept_applicant_to_order
 from database.orders_dungeon_applicants import update_accepted_applicants_fields

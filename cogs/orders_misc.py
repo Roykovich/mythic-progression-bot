@@ -14,8 +14,8 @@ from utils.embed_order import misc_order_embed, staff_order_misc_embed
 
 from database.orders_misc import create_misc_order, accept_misc_applicant_to_order
 from database.orders_misc_applicants import update_accepted_applicants_fields_misc
-from views.view_misc_order import OrderMiscView
-from views.view_staff_misc_order import OrderStaffMiscView
+from views.orders_misc_booster import OrderMiscView
+from views.orders_misc_staff import OrderStaffMiscView
 
 import settings
 

@@ -6,7 +6,7 @@ from discord import app_commands
 from utils.load_region_servers import realms_autocomplete
 from utils.embed_raiderio import raiderio_profile
 
-from views.view_register_raiderio import RegisterRaiderioView
+from views.register_raiderio import RegisterRaiderioView
 from utils.raiderio import get_raiderio_profile
 
 

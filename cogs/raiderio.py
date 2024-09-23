@@ -22,6 +22,11 @@ class Raiderio(commands.Cog):
     @app_commands.describe(name="Nombre del jugador")
     async def raiderioslash(self, interaction: discord.Interaction, region: app_commands.Choice[str], realm: str, name: str):
         pj = get_raiderio_profile(region.value, realm.replace(" ", "%20"), name)
+
+        if "error" in pj:
+            await interaction.response.send_message('No se ha encontrado al personaje. Asegurate que escribiste bien el nombre', ephemeral=True)
+            return
+        
         embed = raiderio_profile(pj)
         await interaction.response.send_message(f'Buscando a {name} en Raider.io')
         await interaction.channel.send(content='', embed=embed, ephemeral=True)
@@ -41,6 +46,10 @@ class Raiderio(commands.Cog):
         name: str
     ):
         pj = get_raiderio_profile(region.value, realm.replace(" ", "%20"), name)
+
+        if "error" in pj:
+            await interaction.response.send_message('No se ha encontrado al personaje. Asegurate que escribiste bien el nombre', ephemeral=True)
+            return
 
         embed = raiderio_profile(pj)
         view = RegisterRaiderioView(timeout=None)

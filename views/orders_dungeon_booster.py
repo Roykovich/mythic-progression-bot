@@ -40,7 +40,7 @@ class OrderView(discord.ui.View):
         characters_list = CharacterSelection(options=booster_characters)
         # Agrego la lista de personajes a la view
         character_selection_view.add_item(characters_list)
-        await interaction.followup.send('Selecciona un personaje:', view=character_selection_view)
+        await interaction.followup.send('Selecciona un personaje:', view=character_selection_view, ephemeral=True)
 
         await character_selection_view.wait()
         # booster_characters = None
@@ -101,7 +101,7 @@ class OrderView(discord.ui.View):
         characters_list = CharacterSelection(options=booster_characters)
         # Agrego la lista de personajes a la view
         character_selection_view.add_item(characters_list)
-        await interaction.followup.send('Selecciona un personaje:', view=character_selection_view)
+        await interaction.followup.send('Selecciona un personaje:', view=character_selection_view, ephemeral=True)
 
         await character_selection_view.wait()
         # booster_characters = None
@@ -162,7 +162,7 @@ class OrderView(discord.ui.View):
         characters_list = CharacterSelection(options=booster_characters)
         # Agrego la lista de personajes a la view
         character_selection_view.add_item(characters_list)
-        await interaction.followup.send('Selecciona un personaje:', view=character_selection_view)
+        await interaction.followup.send('Selecciona un personaje:', view=character_selection_view, ephemeral=True)
 
         await character_selection_view.wait()
         # booster_characters = None

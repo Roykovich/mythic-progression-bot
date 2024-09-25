@@ -33,6 +33,7 @@ pip install -U discord.py requests
 - [ ] Agregar botones para eliminar, actualizar datos de boosters (wallet id y esas cosas)
 - [ ] Agregar el saldo de la pagina en el perfil del Booster
 - [ ] Escribir funcion de cancelar en las ordenes miscelaneas
+- [ ] botones full tiene que ser eliminados al estar lista la orden y dejar full el embed de los booster
 
 ## Refactors
 - [ ] Funciones modulares para los botones full y los de aplicacion de booster
@@ -43,6 +44,7 @@ pip install -U discord.py requests
 - [ ] Crear un .env_example
 - [ ] Agregar mensaje de feedback a la hora de darle a full
 - [ ] Agregar busqueda elastica. Por ejemplo: Cloth, leather, mail and plate para la clase
+- [ ] Agregar una funcion utils que me retorne todos los emojis necesarios.
 
 ## Long Term ToDos
 - [ ] Comando de remake de la orden. Motivo: Si un booster llega a salirse, se crea una nueva orden pero que sea asi: <orden_id>-<1, 2 , 3 ... n>. Esto tendria la funcionalidad que a la hora de acreditar a los boosters a cada uno le toque su parte correspondiente y evitar errores a la hora del pago automatizado.

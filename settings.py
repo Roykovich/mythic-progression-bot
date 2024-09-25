@@ -13,6 +13,7 @@ GUILD_ID = discord.Object(id=int(os.getenv("GUILD_ID")))
 ORDER_CHANNEL_ID = int(os.getenv("ORDER_CHANNEL_ID"))
 COMMAND_CHANNEL_ID = int(os.getenv("COMMAND_CHANNEL_ID"))
 ORDER_STARTED_ID = int(os.getenv("ORDER_STARTED_ID"))
+COMMAND_BOOSTER_ID = int(os.getenv("COMMAND_BOOSTER_ID"))
 
 ROLE_SERVER_STAFF_ID = os.getenv("ROLE_SERVER_STAFF_ID")
 ROLE_DEVELOPER_ID = os.getenv("ROLE_DEVELOPER_ID")

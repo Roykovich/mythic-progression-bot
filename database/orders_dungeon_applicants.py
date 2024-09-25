@@ -10,9 +10,18 @@ def is_already_applicated(order_id, user_id, role):
 
     return result
 
-async def apply_to_order(order_id, message_id, user_id, role, raiderio=random.randint(890, 3500)):
+async def create_application(order_id, message_id, user_id, role, char_class, raiderio):
     new_application_id = uuid.uuid4()
-    db.execute('INSERT INTO applications (id, order_id, message_id, user_id, role, raiderio) VALUES (?, ?, ?, ?, ?, ?)', (new_application_id, order_id, message_id, user_id, role, raiderio))
+    db.execute('''
+        INSERT INTO applications (
+            id, order_id, message_id, user_id, role, class, raiderio
+        ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?
+        )
+    ''', (
+        new_application_id, order_id, message_id, user_id, role, char_class, raiderio
+    ))
+
     print(f'Aplicación [{new_application_id}] creada para la orden [{order_id}]')
 
 
@@ -63,7 +72,7 @@ def update_booster_applicants_fields(embed, role):
 
 
 def display_booster_applications(order_id):
-    boosters = db.execute('SELECT user_id, role, raiderio FROM applications WHERE order_id = ?', (order_id,)).fetchall()
+    boosters = db.execute('SELECT user_id, role, class, raiderio FROM applications WHERE order_id = ?', (order_id,)).fetchall()
     values = {
         'tank': '',
         'healer': '',
@@ -74,11 +83,11 @@ def display_booster_applications(order_id):
     sorted_boosters = sorted(boosters, key=lambda x: x[2], reverse=True)
     for booster in sorted_boosters:
         if booster[1] == 'tank':
-            values['tank'] += f'<@{booster[0]}> ({io_colour_checker(booster[2])} {booster[2]})\n'
+            values['tank'] += f'<@{booster[0]}> ({icons[booster[2]]} {booster[3]})\n'
         elif booster[1] == 'healer':
-            values['healer'] += f'<@{booster[0]}> ({io_colour_checker(booster[2])} {booster[2]})\n'
+            values['healer'] += f'<@{booster[0]}> ({icons[booster[2]]} {booster[3]})\n'
         elif booster[1] == 'dps':
-            values['dps'] += f'<@{booster[0]}> ({io_colour_checker(booster[2])} {booster[2]})\n'
+            values['dps'] += f'<@{booster[0]}> ({icons[booster[2]]} {booster[3]})\n'
         else:
             print("No se encontro el rol")
 
@@ -152,3 +161,25 @@ def io_colour_checker(io: int):
     else:
         return colours[3500]
  
+icons = {
+    'horde': '<:Horde:1136423725152084068>',
+    'alliance': '<:Ally:1136423791799586909>',
+    'Mage': '<:Mage:1082090834725449839>',
+    'Paladin': '<:Paladin:1082090835845328966>',
+    'Hunter': '<:Hunter:1082090832699588628>',
+    'Evoker': '<:Evoke:1082090830975729825>',
+    'Rogue': '<:Rogue:1082090930103922800>',
+    'Priest': '<:Priest:1082098529352294420>',
+    'Warrior': '<:Warrior:1082090838978478120>',
+    'Demon Hunter': '<:classicon_demonhunter:1082090824201941043>',
+    'Druid': '<:classicon_druid:1082090825942577192>',
+    'Shaman': '<:classicon_shaman:1082090828161351751>',
+    'Monk': '<:classicon_monk:1082090827108581417>',
+    'Warlock': '<:Warlock:1082090950765060137>',
+    'Death Knight': '<:dk:1082090829138645064>',
+    'TANK': '<:tank:1270969225871360010>',
+    'HEALING': '<:Heal:1082086361936449627>',
+    'DPS': '<:dps:1257157322044608684> ',
+    'bags': '<:bags:1107428757884637184>',
+    'quest': '<:quest:1107428715962572862>'
+}

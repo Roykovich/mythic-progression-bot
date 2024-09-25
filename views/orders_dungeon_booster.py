@@ -24,7 +24,7 @@ class OrderView(discord.ui.View):
 
         if is_already_applicated(order_id, user_id, role):
             print(f'[!] Usuario: [{user_id}] ya aplicó a la orden [{order_id}] como [{role}]')
-            await interaction.user.send('Ya has aplicado a esta orden.', ephemeral=True)
+            await interaction.followup.send('Ya has aplicado a esta orden.', ephemeral=True).delete_after(5)
             return
 
         booster_characters = await generate_character_list(user_id, role, interaction.user.mention)
@@ -85,7 +85,7 @@ class OrderView(discord.ui.View):
 
         if is_already_applicated(order_id, user_id, role):
             print(f'[!] Usuario: [{user_id}] ya aplicó a la orden [{order_id}] como [{role}]')
-            await interaction.user.send('Ya has aplicado a esta orden.', ephemeral=True)
+            await interaction.followup.send('Ya has aplicado a esta orden.', ephemeral=True).delete_after(5)
             return
 
         booster_characters = await generate_character_list(user_id, role, interaction.user.mention)
@@ -146,7 +146,7 @@ class OrderView(discord.ui.View):
 
         if is_already_applicated(order_id, user_id, role):
             print(f'[!] Usuario: [{user_id}] ya aplicó a la orden [{order_id}] como [{role}]')
-            await interaction.user.send('Ya has aplicado a esta orden.', ephemeral=True)
+            await interaction.followup.send('Ya has aplicado a esta orden.', ephemeral=True).delete_after(5)
             return
 
         booster_characters = await generate_character_list(user_id, role, interaction.user.mention)

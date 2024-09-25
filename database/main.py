@@ -46,9 +46,11 @@ def create_tables():
     db.execute('''
         CREATE TABLE IF NOT EXISTS applications (
             id GUID PRIMARY KEY,
+            character_id GUID,
             order_id TEXT,
             message_id INTEGER,
             user_id INTEGER,
+            class TEXT,
             role TEXT,
             selected_status INT DEFAULT 0,
             raiderio INTEGER

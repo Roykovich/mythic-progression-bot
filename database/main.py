@@ -66,12 +66,16 @@ def create_tables():
             thread_id INTEGER,
             creator_id INTEGER,
             tank TEXT,
+            tank_class TEXT,
             tank_raiderio INTEGER,
             healer TEXT,
+            healer_class TEXT,
             healer_raiderio INTEGER,
             first_dps TEXT,
+            first_dps_class TEXT,
             first_dps_raiderio INTEGER,
             second_dps TEXT,
+            second_dps_class TEXT,
             second_dps_raiderio INTEGER
         )
     ''')

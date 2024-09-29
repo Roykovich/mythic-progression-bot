@@ -43,20 +43,24 @@ class OrderView(discord.ui.View):
         await interaction.followup.send('Selecciona un personaje:', view=character_selection_view, ephemeral=True)
 
         await character_selection_view.wait()
-        # booster_characters = None
-
+        
+        # Usamos un regex para conseguir los valores del realm
+        # nick y raioderio del booster
         character_selected_info = re.findall(
             r'\[([\w\s\']+)\]\s?([A-Za-zÀ-ÿ]+)\s?\(([\d\.\,]+)\)',
             character_selection_view.character_selected
         )      
         
+        booster_realm = character_selected_info[0][0]
+        booster_raiderio = character_selected_info[0][2]
+
         await create_application(
             order_id,
             message_id,
             user_id,
             role,
-            character_selected_info[0][0],
-            character_selected_info[0][2]
+            booster_realm,
+            booster_raiderio
         )
 
         staff_message = await get_message(self.bot, message_id)
@@ -104,20 +108,24 @@ class OrderView(discord.ui.View):
         await interaction.followup.send('Selecciona un personaje:', view=character_selection_view, ephemeral=True)
 
         await character_selection_view.wait()
-        # booster_characters = None
-
+        
+        # Usamos un regex para conseguir los valores del realm
+        # nick y raioderio del booster
         character_selected_info = re.findall(
             r'\[([\w\s\']+)\]\s?([A-Za-zÀ-ÿ]+)\s?\(([\d\.\,]+)\)',
             character_selection_view.character_selected
         )     
         
+        booster_realm = character_selected_info[0][0]
+        booster_raiderio = character_selected_info[0][2]
+
         await create_application(
             order_id,
             message_id,
             user_id,
             role,
-            character_selected_info[0][0],
-            character_selected_info[0][2]
+            booster_realm,
+            booster_raiderio
         )
 
         staff_message = await get_message(self.bot, message_id)
@@ -165,20 +173,24 @@ class OrderView(discord.ui.View):
         await interaction.followup.send('Selecciona un personaje:', view=character_selection_view, ephemeral=True)
 
         await character_selection_view.wait()
-        # booster_characters = None
-
+        
+        # Usamos un regex para conseguir los valores del realm
+        # nick y raioderio del booster
         character_selected_info = re.findall(
             r'\[([\w\s\']+)\]\s?([A-Za-zÀ-ÿ]+)\s?\(([\d\.\,]+)\)',
             character_selection_view.character_selected
         )
         
+        booster_realm = character_selected_info[0][0]
+        booster_raiderio = character_selected_info[0][2]
+
         await create_application(
             order_id,
             message_id,
             user_id,
             role,
-            character_selected_info[0][0],
-            character_selected_info[0][2]
+            booster_realm,
+            booster_raiderio
         )
 
         staff_message = await get_message(self.bot, message_id)
@@ -214,6 +226,7 @@ class OrderView(discord.ui.View):
 
         # Si el Booster estaba aceptado en la orden, aqui nos aseguramos de eliminarlo del embed
         if check_if_booster_is_already_in_order(order_id, user_id) == 1:
+            print(f'[!] Usuario: [{user_id}] ha cancelado su aplicación a la orden [{order_id}]')
             update_staff_applicants_fields(embed, order_id, accepted=True, booster=user_id)
             # Aqui podriamos agregar algo que avise al creador de la orden que alguien se le fue de la orden
 

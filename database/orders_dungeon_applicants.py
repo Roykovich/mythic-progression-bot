@@ -5,6 +5,30 @@ from database.main import get_cursor
 
 db = get_cursor()
 
+icons = {
+    'horde': '<:Horde:1136423725152084068>',
+    'alliance': '<:Ally:1136423791799586909>',
+    'Mage': '<:Mage:1082090834725449839>',
+    'Paladin': '<:Paladin:1082090835845328966>',
+    'Hunter': '<:Hunter:1082090832699588628>',
+    'Evoker': '<:Evoke:1082090830975729825>',
+    'Rogue': '<:Rogue:1082090930103922800>',
+    'Priest': '<:Priest:1082098529352294420>',
+    'Warrior': '<:Warrior:1082090838978478120>',
+    'Demon Hunter': '<:classicon_demonhunter:1082090824201941043>',
+    'Druid': '<:classicon_druid:1082090825942577192>',
+    'Shaman': '<:classicon_shaman:1082090828161351751>',
+    'Monk': '<:classicon_monk:1082090827108581417>',
+    'Warlock': '<:Warlock:1082090950765060137>',
+    'Death Knight': '<:dk:1082090829138645064>',
+    'TANK': '<:tank:1270969225871360010>',
+    'HEALING': '<:Heal:1082086361936449627>',
+    'DPS': '<:dps:1257157322044608684> ',
+    'bags': '<:bags:1107428757884637184>',
+    'quest': '<:quest:1107428715962572862>'
+}
+
+
 def is_already_applicated(order_id, user_id, role):
     result = db.execute('SELECT user_id FROM applications WHERE order_id = ? AND user_id = ? AND role = ?', (order_id, user_id, role)).fetchone()
 
@@ -39,7 +63,10 @@ def get_role_applications(order_id, role):
 def update_staff_applicants_fields(embed, order_id, accepted=False, booster=None) -> None:
     # Si el Booster estaba aceptado, tambien cambia esos campos en el embed del Staff
     if accepted:
-        db.execute('DELETE FROM orders_in_progress WHERE order_id = ? AND (tank = ? OR healer = ? OR first_dps = ? OR second_dps = ?)', (order_id, booster, booster, booster, booster))
+        db.execute('''
+            DELETE FROM orders_in_progress
+            WHERE order_id = ? AND (tank = ? OR healer = ? OR first_dps = ? OR second_dps = ?)
+        ''', (order_id, booster, booster, booster, booster))
 
         accepted_tank = embed.fields[12].value
         accepted_healer = embed.fields[13].value
@@ -103,24 +130,23 @@ def display_booster_applications(order_id):
     return values
 
 
-def update_accepted_applicants_fields(embed, applicant, raiderio, role):
+def update_accepted_applicants_fields(embed, booster_id, raiderio, role, booster_class):
     field = 12 if role == 'tank' else 13 if role == 'healer' else 14
     embed_name = embed.fields[field].name
     embed_value = embed.fields[field].value
-    embed.set_field_at(field, name=embed_name, value=display_accepted_applicants(applicant, raiderio, role, embed_value), inline=True)
+    embed.set_field_at(field, name=embed_name, value=display_accepted_applicants(booster_id, raiderio, role, booster_class, embed_value), inline=True)
 
 
-def display_accepted_applicants(applicant, raiderio, role, value):
-    print(applicant, raiderio, role, value)
-    if not applicant:
+def display_accepted_applicants(booster_id, raiderio, role, booster_class, value):
+    if not booster_id:
         return 'N/A'
     
     if role == 'first_dps':
-        return f'<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
+        return f'<@{booster_id}> ({icons[booster_class]} {raiderio})'
     elif role == 'second_dps':
-        return f'{value}\n<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
+        return f'{value}\n<@{booster_id}> ({icons[booster_class]} {raiderio})'
     else:
-        return f'<@{applicant}> ({io_colour_checker(int(raiderio))} {raiderio})'
+        return f'<@{booster_id}> ({icons[booster_class]} {raiderio})'
 
 
 def remove_accepted_applicant(applicant, value):
@@ -131,55 +157,3 @@ def remove_accepted_applicant(applicant, value):
         new = re.sub(rf'<@{applicant}> \(.+\)', 'N/A', value)
 
     return new
-
-
-def io_colour_checker(io: int):
-    colours = {
-        1000: "⚪",
-        1200: "🟢",
-        2200: "🔵",
-        2500: "🟣",
-        2900: "🟡",
-        3000: "🟤",
-        3500: "🟠",
-    }
-
-    if io <= 0:
-        return '❌' 
-    elif io <= 1000:
-        return colours[1000]
-    elif io <= 2200:
-        return colours[1200]
-    elif io <= 2500:
-        return colours[2200]
-    elif io <= 2900:
-        return colours[2500]
-    elif io <= 3000:
-        return colours[2900]
-    elif io <= 3500:
-        return colours[3000]
-    else:
-        return colours[3500]
- 
-icons = {
-    'horde': '<:Horde:1136423725152084068>',
-    'alliance': '<:Ally:1136423791799586909>',
-    'Mage': '<:Mage:1082090834725449839>',
-    'Paladin': '<:Paladin:1082090835845328966>',
-    'Hunter': '<:Hunter:1082090832699588628>',
-    'Evoker': '<:Evoke:1082090830975729825>',
-    'Rogue': '<:Rogue:1082090930103922800>',
-    'Priest': '<:Priest:1082098529352294420>',
-    'Warrior': '<:Warrior:1082090838978478120>',
-    'Demon Hunter': '<:classicon_demonhunter:1082090824201941043>',
-    'Druid': '<:classicon_druid:1082090825942577192>',
-    'Shaman': '<:classicon_shaman:1082090828161351751>',
-    'Monk': '<:classicon_monk:1082090827108581417>',
-    'Warlock': '<:Warlock:1082090950765060137>',
-    'Death Knight': '<:dk:1082090829138645064>',
-    'TANK': '<:tank:1270969225871360010>',
-    'HEALING': '<:Heal:1082086361936449627>',
-    'DPS': '<:dps:1257157322044608684> ',
-    'bags': '<:bags:1107428757884637184>',
-    'quest': '<:quest:1107428715962572862>'
-}

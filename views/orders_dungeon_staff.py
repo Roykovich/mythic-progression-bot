@@ -79,9 +79,9 @@ class OrderStaffDungeonView(discord.ui.View):
         booster_message = await get_message(self.bot, self.thread_message, self.thread_message)
 
         if boosters:
-            await interaction.response.send_message('Orden completa', ephemeral=True)
+            await interaction.response.send_message('Selección terminada.', ephemeral=True, delete_after=5)
             
-            # Todo esto es para borrar los botones de ambos mensajes
+            # Esto es para borrar los botones de ambos mensajes
             self.clear_items()
             self.thread_view.clear_items()
             await staff_message.edit(view=self)
@@ -90,7 +90,7 @@ class OrderStaffDungeonView(discord.ui.View):
             
             thread = await order_started_channel.create_thread(name=f'Order - {self.order_id}', reason='Orden Iniciada', invitable=False)
             order_info = get_order_info(self.order_id)
-            tags = f'<@{order_info[len(order_info) - 1]}><@&{settings.ROLE_SERVER_STAFF_ID}>\n'
+            tags = f'<@{order_info[17]}><@&{settings.ROLE_SERVER_STAFF_ID}>\n'
 
             for i, booster_id in enumerate(boosters):
                 tags += f'<@{booster_id}>'
@@ -103,6 +103,3 @@ class OrderStaffDungeonView(discord.ui.View):
             return
         
         await interaction.response.send_message('La orden no está completa', ephemeral=True)
-        
-    
-# view_staff_dungeon_order

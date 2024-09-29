@@ -42,6 +42,7 @@ async def generate_character_list(user_id, role, mention):
             'healer': pj['mythic_plus_scores_by_season'][0]['scores']['healer']
         }
         to_label = f'{character[1]} [{character[4]}] ({character[2]})'
+        # [realm] nickname (raiderio)
         to_value = f'{index}[{character[3]}] {character[1]} ({ios[role]})'
 
         result.append(discord.SelectOption(label=to_label, value=to_value, emoji=icons[character[3]], description=f'IO: {ios[role]}'))

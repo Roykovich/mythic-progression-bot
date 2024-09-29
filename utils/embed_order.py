@@ -78,7 +78,6 @@ def staff_order_embed(region, order_name, order_id, description, amount, boostmo
     return embed
 
 def order_created_embed(order, boosters):
-    print(order)
     embed = discord.Embed(
         title=f'({order[6]}) [#{order[0]}] {order[1]}',
         description=f'**Description:** {order[2]}\n**Character Name:** {order[15] if order[15] != 'N/A' else '||[REDACTED]||'}\n**Battletag:** {order[16] if order[16] != 'N/A' else '||[REDACTED]||'}',
@@ -94,9 +93,9 @@ def order_created_embed(order, boosters):
     embed.add_field(name='Faction and Realm', value=f'{faction_choice(faction=order[13])} {order[13].capitalize()}\n<:quest:1107428715962572862> {order[14]}', inline=True)
     embed.add_field(name='Class & Specification', value=f'{class_choice(order[12])} {order[12].replace(' -> ', ' - ')}', inline=True)
     embed.add_field(name='Keystone Lvl', value=f'<:Key:1105410551271653487> {order[8]}+', inline=True)
-    embed.add_field(name='<:tank:1270969225871360010> Tank', value=f'<@{boosters[0]}>', inline=True)
-    embed.add_field(name='<:Heal:1082086361936449627> Healer', value=f'<@{boosters[1]}>', inline=True)
-    embed.add_field(name='<:dps:1257157322044608684> DPS', value=f'<@{boosters[2]}>\n<@{boosters[3]}>', inline=True)
+    embed.add_field(name='<:tank:1270969225871360010> Tank', value=f'{icons[order[18]]} <@{boosters[0]}>', inline=True)
+    embed.add_field(name='<:Heal:1082086361936449627> Healer', value=f'{icons[order[19]]} <@{boosters[1]}>', inline=True)
+    embed.add_field(name='<:dps:1257157322044608684> DPS', value=f'{icons[order[20]]} <@{boosters[2]}>\n{icons[order[21]]} <@{boosters[3]}>', inline=True)
     embed.add_field(name='<:bags:1107428757884637184> Supplier', value=f'<@{order[len(order) - 1]}>', inline=True)
     embed.set_footer(text=f'Price: {order[3]} | {'USD' if order[4] == 'usd' else 'Gold'}')
 

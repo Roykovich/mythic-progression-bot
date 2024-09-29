@@ -231,19 +231,25 @@ class DungeonOrders(commands.Cog):
         role: app_commands.Choice[str],
         ):
         order = accept_applicant_to_order(order_id, user.id, role.value)
+        booster_raiderio = None
+        booster_class = None
         
-        await interaction.response.send_message(f'Aplicante <@{user.id}> aceptado correctamente', ephemeral=True)
+        await interaction.response.send_message(f'Aplicante <@{user.id}> aceptado correctamente', ephemeral=True, delete_after=5)
         booster = await self.bot.fetch_user(user.id)
         await booster.send(f'¡Felicidades, has sido aceptado en la orden `{order_id}` como {roles[role.value]}{role.value}!')
 
         if role.value == 'tank':
-            raiderio = order[6]
+            booster_class = order[6]
+            booster_raiderio = order[7]
         elif role.value == 'healer':
-            raiderio = order[8]
+            booster_class = order[9]
+            booster_raiderio = order[10]
         elif role.value == 'first_dps':
-            raiderio = order[10]
+            booster_class = order[12]
+            booster_raiderio = order[13]
         else:
-            raiderio = order[12]
+            booster_class = order[15]
+            booster_raiderio = order[16]
 
         staff_message = await get_message(self.bot, order[2])
         embed = staff_message.embeds[0]
@@ -251,8 +257,9 @@ class DungeonOrders(commands.Cog):
         update_accepted_applicants_fields(
             embed, 
             user.id, 
-            raiderio, 
-            role.value
+            booster_raiderio, 
+            role.value,
+            booster_class
         )
 
         await staff_message.edit(embed=embed, attachments=[])

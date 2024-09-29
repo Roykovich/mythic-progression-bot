@@ -96,7 +96,7 @@ def order_created_embed(order, boosters):
     embed.add_field(name='<:tank:1270969225871360010> Tank', value=f'{icons[order[18]]} <@{boosters[0]}>', inline=True)
     embed.add_field(name='<:Heal:1082086361936449627> Healer', value=f'{icons[order[19]]} <@{boosters[1]}>', inline=True)
     embed.add_field(name='<:dps:1257157322044608684> DPS', value=f'{icons[order[20]]} <@{boosters[2]}>\n{icons[order[21]]} <@{boosters[3]}>', inline=True)
-    embed.add_field(name='<:bags:1107428757884637184> Supplier', value=f'<@{order[len(order) - 1]}>', inline=True)
+    embed.add_field(name='<:bags:1107428757884637184> Supplier', value=f'<@{order[17]}>', inline=True)
     embed.set_footer(text=f'Price: {order[3]} | {'USD' if order[4] == 'usd' else 'Gold'}')
 
 
